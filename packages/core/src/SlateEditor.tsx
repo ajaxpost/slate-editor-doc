@@ -1,14 +1,14 @@
 import { FC, useMemo, useState } from 'react';
 import { Editable } from './preset/editable';
 import { EditorContextType, EditorProvider } from './context/editor-context';
-import { EditorContentValue, EditorType } from './preset/types';
+import { EditorType } from './preset/types';
 import { generateId } from './utils/generateId';
 import { EditorPlugin } from './plugins/createEditorPlugin';
 import { buildPlugins, buildShortcuts } from './utils/editorBuilders';
 import { Plugin } from './plugins/type';
 
 type IProps = {
-  value?: EditorContentValue;
+  // value?: EditorContentValue;
   plugins: EditorPlugin<string>[];
   placeholder?: string;
 };
@@ -21,7 +21,7 @@ function validateInitialValue(value: unknown): boolean {
   return true;
 }
 
-const SlateEditor: FC<IProps> = ({ value, plugins: _plugins, placeholder }) => {
+const SlateEditor: FC<IProps> = ({ plugins: _plugins, placeholder }) => {
   const plugins = useMemo(() => {
     return _plugins.map((plugin) => plugin.getPlugin as Plugin<string>);
   }, [_plugins]);
@@ -29,10 +29,10 @@ const SlateEditor: FC<IProps> = ({ value, plugins: _plugins, placeholder }) => {
   const [editorState] = useState<EditorContextType>(() => {
     const editor = {} as EditorType;
     if (!editor.id) editor.id = generateId();
-    if (!validateInitialValue(value)) {
-    }
+    // if (!validateInitialValue(value)) {
+    // }
     editor.plugins = buildPlugins(plugins);
-    editor.shortcuts = buildShortcuts(plugins);
+    editor.shortcuts = buildShortcuts(editor, plugins);
     editor.placeholder = placeholder;
     return {
       editor,

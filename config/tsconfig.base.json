@@ -1,5 +1,4 @@
 {
-  "extends": "../tsconfig.json",
   "exclude": [
     "../node_modules",
     "../**/node_modules",
@@ -9,5 +8,51 @@
     "../**/*.spec*",
     "../**/*fixture*",
     "../**/*template*"
-  ]
+  ],
+  "compilerOptions": {
+    // "allowJs": true,
+    // "allowSyntheticDefaultImports": true,
+    // "downlevelIteration": true,
+    // "esModuleInterop": true,
+    // "forceConsistentCasingInFileNames": true,
+    // "isolatedModules": true,
+    // "jsx": "react-jsx",
+    // "lib": ["dom", "dom.iterable", "esnext"],
+    // "module": "esnext",
+    // "moduleResolution": "Bundler",
+    // "noEmit": true,
+    // "resolveJsonModule": true,
+    // "skipLibCheck": true,
+    // "sourceMap": true,
+    // "strict": true,
+    // "target": "es2017",
+    // "declaration": true,
+    // //
+    // "incremental": true,
+    // "noImplicitAny": false,
+    // "preserveSymlinks": false,
+    // "declarationMap": true
+
+    "target": "ES6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "incremental": true,
+    "jsx": "react-jsx",
+    "noImplicitAny": false,
+    "downlevelIteration": true,
+    "module": "ESNext",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "preserveSymlinks": false,
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true
+  }
 }

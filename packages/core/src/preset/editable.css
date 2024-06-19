@@ -3,10 +3,12 @@ body {
     monospace;
 }
 .sortable {
-  padding: 10px 0;
+  /* padding: 10px 0; */
   display: flex;
+  align-items: center;
   transform: translate3d(0, var(--translate-y, 0), 0);
   z-index: 0;
+  outline: none;
 }
 
 .drag-overlay {

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@slate-doc/blockquote": "*",
     "@slate-doc/core": "*",
     "@slate-doc/headings": "*",
     "react": "^18.2.0",

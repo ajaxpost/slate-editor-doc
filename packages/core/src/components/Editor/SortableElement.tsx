@@ -41,6 +41,7 @@ const SortableElement: FC<IProps> = ({
 }) => {
   const readOnly = useReadOnly();
   const sortable = useSortable({ id: element.id || '' });
+  const { isDragging, isOver } = sortable;
   const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
 
   const handleMouseEnter = () => {
@@ -52,8 +53,7 @@ const SortableElement: FC<IProps> = ({
     setActiveBlockId(null);
   };
 
-  const isHovered =
-    activeBlockId === element.id && !readOnly && !sortable.isDragging;
+  const isHovered = (activeBlockId === element.id || isDragging) && !readOnly;
 
   return (
     <div
@@ -62,6 +62,10 @@ const SortableElement: FC<IProps> = ({
       data-hovered={isHovered}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={{
+        borderBottom:
+          isOver && !isDragging ? '2px solid rgb(0,122,255)' : 'none',
+      }}
     >
       <Sortable sortable={sortable}>
         <div

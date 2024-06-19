@@ -1,8 +1,10 @@
 import { FC } from 'react';
 import Editable from '@slate-doc/core';
-import { HeaderOne } from '@slate-doc/headings';
+import '@slate-doc/core/dist/index.css';
+import { HeaderOne, HeaderTwo } from '@slate-doc/headings';
+import { BlockQuote } from '@slate-doc/blockquote';
 
-const plugins = [HeaderOne];
+const plugins = [HeaderOne, HeaderTwo, BlockQuote];
 
 const App: FC = () => {
   return (

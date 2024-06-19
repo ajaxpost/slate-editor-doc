@@ -20,25 +20,16 @@ export const onKeyDown = (editor: EditorType) => {
       if (isStart || isEnd) {
         event.preventDefault();
         const defaultBlock: Node = {
-          type: 'placeholder',
+          type: 'paragraph',
+          id: generateId(),
           children: [{ text: '' }],
-          props: {
-            placeholder: editor.placeholder || '请输入内容',
-          },
+          props: {},
         };
 
-        // 获取所有nodes,如果是Placeholder类型就设置为段落类型
-        for (const [node, path] of Editor.nodes(slate, {
-          at: Editor.range(slate, []),
-        })) {
-          if (Element.isElement(node) && node.type === 'placeholder') {
-            Transforms.setNodes(
-              slate,
-              { type: 'paragraph', id: generateId() },
-              { at: path }
-            );
-          }
-        }
+        // 获取所有nodes
+        // Editor.nodes(slate, {
+        //   at: Editor.range(slate, []),
+        // })
 
         // 相比较 Editor.insertNode 这个更加灵活,可以在特定位置插入,就是可以传入at坐标
         Transforms.insertNodes(slate, defaultBlock, {

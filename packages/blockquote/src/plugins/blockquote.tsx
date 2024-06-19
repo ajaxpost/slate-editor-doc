@@ -1,30 +1,30 @@
 import { EditorPlugin, RenderElementProps } from '@slate-doc/core';
 
-const HeadingOneRender = (props: RenderElementProps) => {
+const BlockQuoteRender = (props: RenderElementProps) => {
   return (
-    <h1
+    <blockquote
       {...props.attributes}
       data-element-type={props.element.type}
       data-node-type={props.element.props?.nodeType}
     >
       {props.children}
-    </h1>
+    </blockquote>
   );
 };
 
-const HeaderOne = new EditorPlugin({
-  type: 'HeadingOne',
+const BlockQuote = new EditorPlugin({
+  type: 'BlockQuote',
   elements: {
-    'heading-one': {
-      render: HeadingOneRender,
+    blockquote: {
+      render: BlockQuoteRender,
       props: {
         nodeType: 'block',
       },
     },
   },
   options: {
-    shortcuts: ['#', 'h1'],
+    shortcuts: ['>', 'blockquote'],
   },
 });
 
-export { HeaderOne };
+export { BlockQuote };

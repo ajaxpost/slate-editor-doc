@@ -1,5 +1,5 @@
 import type { Descendant, Editor, BaseEditor } from 'slate';
-import { Plugin } from '../plugins/type';
+import { Plugin, Shortcut } from '../plugins/type';
 import { ReactEditor } from 'slate-react';
 import { HistoryEditor } from 'slate-history';
 
@@ -9,10 +9,8 @@ export interface EditorType {
   plugins: Record<string, Plugin<string>>;
   slate: Editor | null;
   placeholder?: string;
-  shortcuts: Record<string, unknown>; // TODO
+  shortcuts: Record<string, Shortcut<string>>; // TODO
 }
-
-export type EditorContentValue = EditorType['children'];
 
 export type SlateElement<K extends string = string, T = any> = {
   id?: string;
@@ -33,7 +31,7 @@ export type SlateElement<K extends string = string, T = any> = {
 type CustomText = { text: string };
 
 interface CustomElement {
-  type: 'paragraph' | 'placeholder';
+  type: 'paragraph';
   id?: string;
   children: Descendant[] | SlateElement[];
   props?: Record<string, unknown>;

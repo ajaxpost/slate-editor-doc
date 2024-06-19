@@ -1,8 +1,8 @@
 import SlateEditor from './SlateEditor';
 
-export * from './preset/types.d';
+export * from './preset/types';
 
-export * from './plugins/type.d';
+export * from './plugins/type';
 
 export * from './plugins/createEditorPlugin';
 

@@ -1,7 +1,9 @@
 {
-  "name": "@slate-doc/headings",
+  "name": "@slate-doc/blockquote",
   "version": "1.0.0",
-  "license": "MIT",
+  "scripts": {
+    "dev": "rollup -c rollup.config.js -w --bundleConfigAsCjs --environment NODE_ENV:development"
+  },
   "main": "dist/index.js",
   "type": "module",
   "module": "dist/index.js",
@@ -9,9 +11,6 @@
   "files": [
     "dist/"
   ],
-  "scripts": {
-    "dev": "rollup -c rollup.config.js -w --bundleConfigAsCjs --environment NODE_ENV:development"
-  },
   "dependencies": {
     "@emotion/css": "^11.11.2",
     "@slate-doc/core": "*",

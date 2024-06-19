@@ -1,2 +1,2 @@
-export * from './types.d';
-export { HeaderOne } from './plugins/HeadingOne';
+export * from './plugins/HeadingOne';
+export * from './plugins/HeadingTwo';

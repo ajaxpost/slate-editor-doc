@@ -1,17 +1,15 @@
 {
   "name": "@slate-doc/core",
   "version": "0.0.0",
-  "private": true,
-  "exports": {
-    ".": {
-      "import": "./src/index.ts"
-    }
-  },
+  "main": "dist/index.js",
+  "type": "module",
+  "module": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "dev": "echo 'Add dev script here'",
-    "build": "echo 'Add build script here'",
-    "test": "echo 'Add test script here'",
-    "lint": "echo 'Add lint script here'"
+    "dev": "rollup -c rollup.config.js -w --bundleConfigAsCjs --environment NODE_ENV:development"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
@@ -22,10 +20,13 @@
     "slate": "^0.103.0",
     "slate-history": "^0.100.0",
     "slate-hyperscript": "^0.100.0",
-    "slate-react": "^0.104.0"
+    "slate-react": "^0.104.0",
+    "react": "^18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.3.3",
-    "react": "^18.3.1"
+    "@types/react": "^18.3.3"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.2"
   }
 }

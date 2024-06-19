@@ -4,6 +4,7 @@ import { withHistory } from 'slate-history';
 import {
   Editable as _Editable,
   RenderElementProps,
+  RenderLeafProps,
   Slate,
   withReact,
 } from 'slate-react';
@@ -21,11 +22,10 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 import { withNodeId } from '../extensions/withNodeId';
-import { withPlaceholder } from '../extensions/withPlaceholder';
 import SortableElement from '../components/Editor/SortableElement';
-import DefaultPlaceholder from '../components/Editor/DefaultPlaceholder';
 import './editable.css';
 import { EditorType } from './types';
+import TextLeaf from '../components/TextLeaf/TextLeaf';
 
 const initialValue: Descendant[] = [
   {
@@ -38,13 +38,22 @@ const initialValue: Descendant[] = [
 type IProps = {
   width: number | string;
 };
+const renderElementContent = (
+  ElementComponent: React.ElementType | undefined,
+  props: RenderElementProps
+) => {
+  if (!ElementComponent) {
+    return <DefaultElement {...props} />;
+  }
 
-const renderElementContent = (props: RenderElementProps) => {
-  return <DefaultElement {...props} />;
+  return <ElementComponent {...props} />;
 };
 
 const getMappedElements = (plugins: EditorType['plugins']) => {
-  const map: Record<string, unknown> = {};
+  const map: Record<
+    string,
+    ((props: RenderElementProps) => JSX.Element) | undefined
+  > = {};
   for (const [, value] of Object.entries(plugins)) {
     const type = Object.keys(value.elements)[0];
     map[type] = value.elements[type].render;
@@ -57,9 +66,9 @@ export const Editable: FC<IProps> = ({ width }) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const editor = useMemo(
     () =>
-      withPlaceholder(
+      withShortcuts(
         editorState,
-        withShortcuts(withNodeId(withReact(withHistory(createEditor()))))
+        withNodeId(withReact(withHistory(createEditor())))
       ),
     []
   );
@@ -69,10 +78,28 @@ export const Editable: FC<IProps> = ({ width }) => {
   );
 
   const renderElement = (props: RenderElementProps) => {
-    if (props.element.type === 'placeholder') {
-      return <DefaultPlaceholder {...props} />;
-    }
-    return <SortableElement {...props} renderElement={renderElementContent} />;
+    const ElementComponent: React.ElementType | undefined =
+      ELEMENTS_MAP[props.element.type];
+
+    return (
+      <SortableElement
+        {...props}
+        renderElement={() => renderElementContent(ElementComponent, props)}
+      />
+    );
+  };
+
+  const renderLeaf = (props: RenderLeafProps) => {
+    const showPlaceholder = props.leaf.text === '';
+
+    return (
+      <TextLeaf
+        attributes={props.attributes}
+        placeholder={showPlaceholder ? editorState.placeholder : undefined}
+      >
+        {props.children}
+      </TextLeaf>
+    );
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -108,9 +135,6 @@ export const Editable: FC<IProps> = ({ width }) => {
     setActiveId(null);
   };
 
-  const onSelect = (e: React.SyntheticEvent<HTMLDivElement, Event>) =>
-    EVENT_HANDLERS.onSelect(e, editor);
-
   return (
     <Slate editor={editor} initialValue={initialValue}>
       <DndContext
@@ -131,9 +155,9 @@ export const Editable: FC<IProps> = ({ width }) => {
             `}
             id="editable"
             spellCheck
-            onSelect={onSelect}
             readOnly={false}
             renderElement={renderElement}
+            renderLeaf={renderLeaf}
             onKeyDown={onKeyDown}
           />
         </SortableContext>

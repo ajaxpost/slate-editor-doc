@@ -1,12 +1,14 @@
-import type { Descendant, Editor } from 'slate';
-import type { RenderSlateElementProps } from 'slate-react';
+import type { Editor } from 'slate';
 import type { EditorEventHandlers } from './eventHandlers';
 import { EditorType } from '../preset/types';
+import { HTMLAttributes } from 'react';
+import { RenderElementProps } from 'slate-react';
 
 export interface PluginElementProps {
   nodeType?: 'block' | 'inline' | 'void' | 'inlineVoid';
+  asRoot?: string;
 }
-export type PluginElementRenderProps = RenderSlateElementProps & {
+export type PluginElementRenderProps = {
   HTMLAttributes?: HTMLAttributes<HTMLElement>;
 };
 
@@ -17,12 +19,12 @@ export interface PluginOptions {
   [name: string]: unknown;
 }
 export interface PluginElement {
-  render: (props: RenderSlateElementProps) => JSX.Element;
+  render: (props: RenderElementProps) => JSX.Element;
   props?: PluginElementProps;
 }
 
 export type PluginElementsMap<TKeys extends string = string> = {
-  [key in TKeys]: PluginElement;
+  [key in TKeys]: Partial<PluginElement>;
 };
 
 export type EventHandlers = {
@@ -39,4 +41,12 @@ export interface Plugin<TKeys extends string = string> {
   options?: PluginOptions;
 }
 
-export { RenderSlateElementProps };
+export interface Shortcut<TKeys extends string = string> {
+  type: string;
+  elements: PluginElementsMap<TKeys>;
+  options: PluginOptions;
+  create: () => void;
+  isActive: () => boolean;
+}
+
+export type { RenderElementProps };

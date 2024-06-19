@@ -1,30 +1,30 @@
 import { EditorPlugin, RenderElementProps } from '@slate-doc/core';
 
-const HeadingOneRender = (props: RenderElementProps) => {
+const HeadingTwoRender = (props: RenderElementProps) => {
   return (
-    <h1
+    <h2
       {...props.attributes}
       data-element-type={props.element.type}
       data-node-type={props.element.props?.nodeType}
     >
       {props.children}
-    </h1>
+    </h2>
   );
 };
 
-const HeaderOne = new EditorPlugin({
-  type: 'HeadingOne',
+const HeaderTwo = new EditorPlugin({
+  type: 'HeadingTwo',
   elements: {
-    'heading-one': {
-      render: HeadingOneRender,
+    'heading-two': {
+      render: HeadingTwoRender,
       props: {
         nodeType: 'block',
       },
     },
   },
   options: {
-    shortcuts: ['#', 'h1'],
+    shortcuts: ['##', 'h2'],
   },
 });
 
-export { HeaderOne };
+export { HeaderTwo };

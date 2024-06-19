@@ -1,14 +1,28 @@
 {
   "name": "slate-doc",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "turbo build",
+    "pdc": "turbo dev --filter=./packages/core",
+    "pdp": "turbo dev --filter=./packages/* --filter=!./packages/core",
+    "p:dev": "conc \"yarn pdc\" \"yarn pdp\"",
     "dev": "turbo dev --filter www",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "concurrently": "^8.2.2",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.2.5",
+    "rollup": "^4.18.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.36.0",
     "turbo": "latest"
   },
   "engines": {
