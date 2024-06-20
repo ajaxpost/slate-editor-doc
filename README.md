@@ -2,6 +2,10 @@ https://codesandbox.io/p/sandbox/slate-dnd-kit-brld4z?file=%2Fsrc%2FApp.js%3A87%
 
 - [x] 拖拽
 
-turbo 运行命令错误
+yarn pdc
+yarn pdp
 yarn dev
-yarn p:dev
+
+待解决的问题:
+
+1. blockquote 回车时,不需要设置为默认节点类型
