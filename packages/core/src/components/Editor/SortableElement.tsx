@@ -23,7 +23,7 @@ const Sortable: FC<SortableProps> = ({ sortable, children }) => {
       ref={sortable.setNodeRef}
       style={{
         transition: sortable.transition,
-        '--translate-y': toPx(sortable.transform?.y),
+        // '--translate-y': toPx(sortable.transform?.y),
         pointerEvents: sortable.isSorting ? 'none' : undefined,
         opacity: sortable.isDragging ? 0.5 : 1,
       }}
@@ -92,7 +92,13 @@ const SortableElement: FC<IProps> = ({
             ⠿
           </button>
         </div>
-        <div>{renderElement({ element, children })}</div>
+        <div
+          className={css`
+            flex: 1;
+          `}
+        >
+          {renderElement({ element, children })}
+        </div>
       </Sortable>
     </div>
   );

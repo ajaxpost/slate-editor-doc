@@ -1,4 +1,5 @@
 import { EditorPlugin, RenderElementProps } from '@slate-doc/core';
+import { css } from '@emotion/css';
 
 const HeadingTwoRender = (props: RenderElementProps) => {
   return (
@@ -6,6 +7,11 @@ const HeadingTwoRender = (props: RenderElementProps) => {
       {...props.attributes}
       data-element-type={props.element.type}
       data-node-type={props.element.props?.nodeType}
+      className={css`
+        margin: 0;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+      `}
     >
       {props.children}
     </h2>

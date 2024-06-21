@@ -11,6 +11,10 @@ type IProps = {
   // value?: EditorContentValue;
   plugins: EditorPlugin<string>[];
   placeholder?: string;
+  readonly?: boolean;
+  width?: number;
+  style?: React.CSSProperties;
+  className?: string;
 };
 
 function validateInitialValue(value: unknown): boolean {
@@ -21,7 +25,14 @@ function validateInitialValue(value: unknown): boolean {
   return true;
 }
 
-const SlateEditor: FC<IProps> = ({ plugins: _plugins, placeholder }) => {
+const SlateEditor: FC<IProps> = ({
+  plugins: _plugins,
+  placeholder,
+  readonly = false,
+  width,
+  style,
+  className,
+}) => {
   const plugins = useMemo(() => {
     return _plugins.map((plugin) => plugin.getPlugin as Plugin<string>);
   }, [_plugins]);
@@ -31,6 +42,7 @@ const SlateEditor: FC<IProps> = ({ plugins: _plugins, placeholder }) => {
     if (!editor.id) editor.id = generateId();
     // if (!validateInitialValue(value)) {
     // }
+    editor.readOnly = readonly;
     editor.plugins = buildPlugins(plugins);
     editor.shortcuts = buildShortcuts(editor, plugins);
     editor.placeholder = placeholder;
@@ -43,7 +55,7 @@ const SlateEditor: FC<IProps> = ({ plugins: _plugins, placeholder }) => {
 
   return (
     <EditorProvider editorState={editorState}>
-      <Editable width={500} />
+      <Editable width={width} style={style} className={className} />
     </EditorProvider>
   );
 };

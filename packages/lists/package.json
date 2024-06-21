@@ -1,6 +1,7 @@
 {
-  "name": "@slate-doc/core",
+  "name": "@slate-doc/lists",
   "version": "1.0.0",
+  "license": "MIT",
   "main": "dist/index.js",
   "type": "module",
   "module": "dist/index.js",
@@ -12,22 +13,14 @@
     "dev": "rollup -c rollup.config.js -w --bundleConfigAsCjs --environment NODE_ENV:development"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.1.0",
-    "@dnd-kit/sortable": "^8.0.0",
     "@emotion/css": "^11.11.2",
-    "clsx": "^2.1.1",
-    "is-hotkey": "^0.2.0",
-    "lucide-react": "^0.395.0",
+    "@slate-doc/core": "*",
     "react": "^18.3.1",
-    "slate": "^0.103.0",
-    "slate-history": "^0.100.0",
-    "slate-hyperscript": "^0.100.0",
-    "slate-react": "^0.104.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.3.3"
+    "slate": "^0.103.0"
   },
   "peerDependencies": {
-    "react": ">=17.0.2"
+    "@slate-doc/core": "*",
+    "react": ">=17.0.2",
+    "slate": ">=0.103.0"
   }
 }

@@ -1,12 +1,13 @@
-import type { Editor } from 'slate';
 import type { EditorEventHandlers } from './eventHandlers';
 import { EditorType } from '../preset/types';
 import { HTMLAttributes } from 'react';
 import { RenderElementProps } from 'slate-react';
+import { HOTKEYS } from '../utils/hotkeys';
 
 export interface PluginElementProps {
   nodeType?: 'block' | 'inline' | 'void' | 'inlineVoid';
   asRoot?: string;
+  [name: string]: unknown;
 }
 export type PluginElementRenderProps = {
   HTMLAttributes?: HTMLAttributes<HTMLElement>;
@@ -27,10 +28,12 @@ export type PluginElementsMap<TKeys extends string = string> = {
   [key in TKeys]: Partial<PluginElement>;
 };
 
+export type HOTKEYS_TYPE = typeof HOTKEYS;
+
 export type EventHandlers = {
   [key in keyof EditorEventHandlers]: (
     editor: EditorType,
-    slate: Editor
+    HOTKEYS: HOTKEYS_TYPE
   ) => EditorEventHandlers[key] | void;
 };
 

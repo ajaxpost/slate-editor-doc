@@ -7,5 +7,3 @@ yarn pdp
 yarn dev
 
 待解决的问题:
-
-1. blockquote 回车时,不需要设置为默认节点类型

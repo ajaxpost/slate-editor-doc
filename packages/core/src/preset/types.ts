@@ -9,7 +9,7 @@ export interface EditorType {
   plugins: Record<string, Plugin<string>>;
   slate: Editor | null;
   placeholder?: string;
-  shortcuts: Record<string, Shortcut<string>>; // TODO
+  shortcuts: Record<string, Shortcut<string>>;
 }
 
 export type SlateElement<K extends string = string, T = any> = {

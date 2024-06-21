@@ -8,7 +8,7 @@ import {
   Slate,
   withReact,
 } from 'slate-react';
-import { useEditorState } from '../context/editor-context';
+import { useEditorState, useReadOnly } from '../context/editor-context';
 import DefaultElement from '../components/Editor/DefaultElement';
 import { css } from '@emotion/css';
 import { generateId } from '../utils/generateId';
@@ -26,6 +26,10 @@ import SortableElement from '../components/Editor/SortableElement';
 import './editable.css';
 import { EditorType } from './types';
 import TextLeaf from '../components/TextLeaf/TextLeaf';
+import { HOTKEYS } from '../utils/hotkeys';
+import _ from 'lodash';
+import { EditorEventHandlers } from '../plugins/eventHandlers';
+import { HOTKEYS_TYPE } from '../plugins/type';
 
 const initialValue: Descendant[] = [
   {
@@ -36,7 +40,9 @@ const initialValue: Descendant[] = [
 ];
 
 type IProps = {
-  width: number | string;
+  width?: number;
+  style?: React.CSSProperties;
+  className?: string;
 };
 const renderElementContent = (
   ElementComponent: React.ElementType | undefined,
@@ -61,8 +67,9 @@ const getMappedElements = (plugins: EditorType['plugins']) => {
   return map;
 };
 
-export const Editable: FC<IProps> = ({ width }) => {
+export const Editable: FC<IProps> = ({ width, style, className }) => {
   const editorState = useEditorState();
+  const readOnly = useReadOnly();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const editor = useMemo(
     () =>
@@ -103,6 +110,17 @@ export const Editable: FC<IProps> = ({ width }) => {
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const events: any[] = [];
+    for (const name in editorState.plugins) {
+      const plugin = editorState.plugins[name];
+      const plugin_events = plugin?.events || {};
+      if (plugin_events.onKeyDown) {
+        events.push(plugin_events.onKeyDown);
+      }
+    }
+    for (const e of _.uniq(events)) {
+      e(editorState, HOTKEYS)(event);
+    }
     EVENT_HANDLERS.onKeyDown(editorState)(event);
   };
   const items = useMemo(
@@ -145,6 +163,7 @@ export const Editable: FC<IProps> = ({ width }) => {
         <SortableContext items={items}>
           <_Editable
             className={css`
+              width: ${width ? `${width}px` : '100%'};
               padding-left: 2rem;
               padding-right: 2rem;
               padding-bottom: 20vh;
@@ -152,6 +171,7 @@ export const Editable: FC<IProps> = ({ width }) => {
               font-size: 1rem;
               line-height: 1.5rem;
               outline: none;
+              ${className}
             `}
             id="editable"
             spellCheck
@@ -159,6 +179,7 @@ export const Editable: FC<IProps> = ({ width }) => {
             renderElement={renderElement}
             renderLeaf={renderLeaf}
             onKeyDown={onKeyDown}
+            style={style}
           />
         </SortableContext>
       </DndContext>

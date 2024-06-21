@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@slate-doc/blockquote": "*",
+    "@slate-doc/callout": "*",
     "@slate-doc/core": "*",
     "@slate-doc/headings": "*",
+    "@slate-doc/lists": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

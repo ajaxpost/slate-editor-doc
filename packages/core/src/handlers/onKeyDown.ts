@@ -1,7 +1,7 @@
 import { EditorType } from '../preset/types';
 import { generateId } from '../utils/generateId';
 import { HOTKEYS } from '../utils/hotkeys';
-import { Path, Editor, Transforms, Node, Element } from 'slate';
+import { Path, Editor, Transforms, Node } from 'slate';
 
 export const onKeyDown = (editor: EditorType) => {
   return (event: React.KeyboardEvent) => {
@@ -14,6 +14,7 @@ export const onKeyDown = (editor: EditorType) => {
     if (HOTKEYS.isEnter(event)) {
       // 判断事件的默认执行是否已经被阻止,如果已经被阻止返回true
       if (event.isDefaultPrevented()) return;
+
       const isStart = Editor.isStart(slate, slate.selection.anchor, parentPath);
       const isEnd = Editor.isEnd(slate, slate.selection.anchor, parentPath);
 

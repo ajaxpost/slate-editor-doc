@@ -10,4 +10,5 @@ export const HOTKEYS = {
   isEnter: create('enter'),
   isArrowUp: create('up'),
   isArrowDown: create('down'),
+  isTab: create('tab'),
 };
