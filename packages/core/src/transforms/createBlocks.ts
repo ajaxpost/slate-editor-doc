@@ -40,5 +40,7 @@ export function createBlock(
     match: (n) => {
       return !Editor.isEditor(n) && Element.isElement(n);
     },
+    mode: 'highest',
   });
+  console.log('should create block here');
 }

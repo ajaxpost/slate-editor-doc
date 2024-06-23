@@ -1,5 +1,6 @@
 import { EditorPlugin, RenderElementProps } from '@slate-doc/core';
 import { css } from '@emotion/css';
+import { onKeyDown } from '../events/onKeyDown';
 
 const BlockQuoteRender = (props: RenderElementProps) => {
   return (
@@ -33,6 +34,9 @@ const BlockQuote = new EditorPlugin({
         nodeType: 'block',
       },
     },
+  },
+  events: {
+    onKeyDown,
   },
   options: {
     shortcuts: ['>', 'blockquote'],
