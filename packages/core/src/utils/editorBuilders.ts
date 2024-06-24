@@ -40,7 +40,7 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
       elements[key] = element;
     });
 
-    const { shortcuts = [] } = plugin.options || {};
+    const { shortcuts = [], create = () => {} } = plugin.options || {};
     if (shortcuts.length) {
       shortcuts.forEach((shortcut) => {
         map[shortcut] = {
@@ -49,7 +49,9 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
           options: {
             shortcuts,
           },
-          create: () => createBlock(editor, plugin.type, {}),
+          create: () => {
+            create(editor);
+          },
           isActive: () => {
             // 判断一下当前所在行这个type是否与要生成的type相同
             // 如果相同返回true

@@ -1,7 +1,10 @@
+// @ts-nocheck
+
 import { Transforms, Element, Editor } from 'slate';
 import { EditorType } from '../preset/types';
 import { buildBlockElement } from '../utils/editorBuilders';
 import { getRootBlockElementType } from '../utils/pluginElementType';
+import { generateId } from '../utils/generateId';
 
 export function createBlock(
   editor: EditorType,
@@ -24,6 +27,13 @@ export function createBlock(
     props: nodeProps,
   });
 
+  Transforms.setNodes(slate, elementNode, {
+    match: (n) => {
+      return !Editor.isEditor(n) && Element.isElement(n);
+    },
+    mode: 'highest',
+  });
+
   /**
    * mode 选项决定了如何匹配节点。它有两个可能的值：'highest' 和 'lowest'。
 
@@ -36,11 +46,4 @@ export function createBlock(
   //   match: (n) => Element.isElement(n),
   //   mode: 'highest',
   // });
-  Transforms.setNodes(slate, elementNode, {
-    match: (n) => {
-      return !Editor.isEditor(n) && Element.isElement(n);
-    },
-    mode: 'highest',
-  });
-  console.log('should create block here');
 }

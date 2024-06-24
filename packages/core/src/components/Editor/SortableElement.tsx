@@ -55,6 +55,10 @@ const SortableElement: FC<IProps> = ({
 
   const isHovered = (activeBlockId === element.id || isDragging) && !readOnly;
 
+  if (element.props?.wrap) {
+    return renderElement({ element, children });
+  }
+
   return (
     <div
       {...attributes}

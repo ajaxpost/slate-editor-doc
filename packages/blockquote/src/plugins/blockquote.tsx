@@ -1,4 +1,4 @@
-import { EditorPlugin, RenderElementProps } from '@slate-doc/core';
+import { EditorPlugin, EditorType, RenderElementProps } from '@slate-doc/core';
 import { css } from '@emotion/css';
 import { onKeyDown } from '../events/onKeyDown';
 
@@ -40,6 +40,11 @@ const BlockQuote = new EditorPlugin({
   },
   options: {
     shortcuts: ['>', 'blockquote'],
+    create: (editor: EditorType) => {
+      console.log(editor, 'editor');
+      const slate = editor.slate;
+      if (!slate || !slate.selection) return;
+    },
   },
 });
 

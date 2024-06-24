@@ -11,7 +11,11 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
       at: slate.selection,
     });
     if (node.type === 'blockquote') {
-      console.log('blockquote onKeyDown node: ', node);
+      if (hotkeys.isEnter(event)) {
+        event.preventDefault();
+        // 添加换行符
+        slate.insertText('\n');
+      }
     }
   };
 }

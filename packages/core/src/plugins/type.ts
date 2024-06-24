@@ -7,6 +7,7 @@ import { HOTKEYS } from '../utils/hotkeys';
 export interface PluginElementProps {
   nodeType?: 'block' | 'inline' | 'void' | 'inlineVoid';
   asRoot?: string;
+  wrap?: boolean;
   [name: string]: unknown;
 }
 export type PluginElementRenderProps = {
@@ -17,6 +18,8 @@ export interface PluginOptions {
   shortcuts?: string[];
   align?: 'left' | 'center' | 'right';
   HTMLAttributes?: HTMLAttributes<HTMLElement>;
+  create?: (editor: EditorType) => void;
+  match?: (editor: EditorType) => boolean;
   [name: string]: unknown;
 }
 export interface PluginElement {

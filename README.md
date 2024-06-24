@@ -23,4 +23,5 @@ yarn dev
 
 待实现的功能:
 
+1. 在每个插件中新增 create 函数,用于单独的实现创建节点功能,之前是采用公共 createBlock 函数来创建节点
 1. 在其他节点中嵌套节点,比如在 blockquote 中嵌套 headings 节点
