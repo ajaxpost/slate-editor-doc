@@ -1,11 +1,11 @@
-import type { EditorEventHandlers } from './eventHandlers';
-import { EditorType } from '../preset/types';
-import { HTMLAttributes } from 'react';
-import { RenderElementProps } from 'slate-react';
-import { HOTKEYS } from '../utils/hotkeys';
+import type { EditorEventHandlers } from "./eventHandlers";
+import { EditorType } from "../preset/types";
+import { HTMLAttributes } from "react";
+import { RenderElementProps } from "slate-react";
+import { HOTKEYS } from "../utils/hotkeys";
 
 export interface PluginElementProps {
-  nodeType?: 'block' | 'inline' | 'void' | 'inlineVoid';
+  nodeType?: "block" | "inline" | "void" | "inlineVoid";
   asRoot?: string;
   wrap?: boolean;
   [name: string]: unknown;
@@ -16,10 +16,10 @@ export type PluginElementRenderProps = {
 
 export interface PluginOptions {
   shortcuts?: string[];
-  align?: 'left' | 'center' | 'right';
+  align?: "left" | "center" | "right";
   HTMLAttributes?: HTMLAttributes<HTMLElement>;
-  create?: (editor: EditorType) => void;
-  match?: (editor: EditorType) => boolean;
+  create?: (editor: EditorType, elements: Partial<PluginElement>) => void;
+  match?: (elements: Partial<PluginElement>) => boolean;
   [name: string]: unknown;
 }
 export interface PluginElement {
@@ -42,14 +42,14 @@ export type EventHandlers = {
 
 export interface Plugin<TKeys extends string = string> {
   type: string;
-  elements: PluginElementsMap<TKeys>;
+  elements: Partial<PluginElement>;
   events?: EventHandlers;
   options?: PluginOptions;
 }
 
 export interface Shortcut<TKeys extends string = string> {
   type: string;
-  elements: PluginElementsMap<TKeys>;
+  elements: Partial<PluginElement>;
   options: PluginOptions;
   create: () => void;
   isActive: () => boolean;

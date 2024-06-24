@@ -1,7 +1,7 @@
-import type { Descendant, Editor, BaseEditor } from 'slate';
-import { Plugin, Shortcut } from '../plugins/type';
-import { ReactEditor } from 'slate-react';
-import { HistoryEditor } from 'slate-history';
+import type { Descendant, Editor, BaseEditor, Node } from "slate";
+import { Plugin, Shortcut } from "../plugins/type";
+import { ReactEditor } from "slate-react";
+import { HistoryEditor } from "slate-history";
 
 export interface EditorType {
   id: string;
@@ -31,13 +31,13 @@ export type SlateElement<K extends string = string, T = any> = {
 type CustomText = { text: string };
 
 interface CustomElement {
-  type: 'paragraph';
   id?: string;
   children: Descendant[] | SlateElement[];
   props?: Record<string, unknown>;
+  [name: string]: unknown;
 }
 
-declare module 'slate' {
+declare module "slate" {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor & HistoryEditor;
     Element: CustomElement;
