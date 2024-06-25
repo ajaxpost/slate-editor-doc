@@ -1,20 +1,23 @@
-import { EditorType, HOTKEYS_TYPE } from '@slate-doc/core';
-import { Editor } from 'slate';
+import { EditorType, HOTKEYS_TYPE, SlateElement } from "@slate-doc/core";
+import { Editor, Element } from "slate";
 
 export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
   return (event: React.KeyboardEvent) => {
     const slate = editor.slate;
     if (!slate || !slate.selection) return;
 
-    // @ts-ignore
-    const [node] = Editor.above(slate, {
+    const match = Editor.above<SlateElement>(slate, {
       at: slate.selection,
+      match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
     });
-    if (node.type === 'blockquote') {
+    if (!match) return;
+    const [node] = match;
+    if (node.type === "blockquote") {
       if (hotkeys.isEnter(event)) {
         event.preventDefault();
-        // 添加换行符
-        slate.insertText('\n');
+        Editor.withoutNormalizing(slate, () => {
+          Editor.insertBreak(slate);
+        });
       }
     }
   };

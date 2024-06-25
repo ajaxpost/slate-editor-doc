@@ -47,7 +47,6 @@ const HeaderOne = new EditorPlugin({
         type: "heading-one",
         props: element.props,
       });
-
       const match = Editor.above<SlateElement>(slate, {
         at: slate.selection,
         match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),

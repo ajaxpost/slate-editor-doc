@@ -40,7 +40,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",// node
     "resolveJsonModule": true,
     "isolatedModules": false,
     "incremental": true,

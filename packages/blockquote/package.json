@@ -11,6 +11,11 @@
   "files": [
     "dist/"
   ],
+  "exports":{
+    "." : {
+      "import": "./src/index.ts"
+    }
+  },
   "dependencies": {
     "@emotion/css": "^11.11.2",
     "@slate-doc/core": "*",

@@ -41,7 +41,7 @@ const BlockQuote = new EditorPlugin({
     },
   },
   events: {
-    // onKeyDown,
+    onKeyDown,
   },
   options: {
     shortcuts: [">", "blockquote"],

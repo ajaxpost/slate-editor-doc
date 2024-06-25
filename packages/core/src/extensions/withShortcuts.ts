@@ -6,8 +6,9 @@ import {
   Text,
   TextUnit,
   Transforms,
+  Node,
 } from "slate";
-import { EditorType } from "../preset/types";
+import { EditorType, SlateElement } from "../preset/types";
 
 export const withShortcuts = (editor: EditorType, slate: Editor) => {
   const { insertText, deleteBackward } = slate;
@@ -67,11 +68,12 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
     // 光标在当前节点的开始位置
     if (isStart) {
       const text = Editor.string(slate, parentPath);
-      // @ts-ignore
-      const [node] = Editor.above(slate, {
+      const match = Editor.above<SlateElement>(slate, {
         match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
         mode: "lowest",
       });
+      if (!match) return;
+      const [node, path] = match;
 
       if (text.trim().length === 0) {
         // 如果当前节点type是paragraph并且文本为空,删除当前节点
@@ -80,8 +82,15 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
             at: parentPath,
           });
         } else {
-          // 如果当前节点不是paragraph,就将当前节点的type改为paragraph
-          Transforms.setNodes(slate, { type: "paragraph" });
+          if (path.length >= 2) {
+            Transforms.unwrapNodes(slate, {
+              at: parentPath,
+              match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+            });
+          } else {
+            // 如果当前节点不是paragraph,就将当前节点的type改为paragraph
+            Transforms.setNodes(slate, { type: "paragraph" });
+          }
         }
       }
     } else {

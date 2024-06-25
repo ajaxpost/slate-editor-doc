@@ -1,13 +1,12 @@
 {
   "name": "@slate-doc/core",
   "version": "1.0.0",
-  "main": "dist/index.js",
   "type": "module",
-  "module": "dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist/"
-  ],
+  "exports":{
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
   "scripts": {
     "dev": "rollup -c rollup.config.js -w --bundleConfigAsCjs --environment NODE_ENV:development"
   },

@@ -28,8 +28,6 @@ import { EditorType } from "./types";
 import TextLeaf from "../components/TextLeaf/TextLeaf";
 import { HOTKEYS } from "../utils/hotkeys";
 import _ from "lodash";
-import { EditorEventHandlers } from "../plugins/eventHandlers";
-import { HOTKEYS_TYPE } from "../plugins/type";
 
 const initialValue: Descendant[] = [
   {
@@ -110,6 +108,10 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
     );
   };
 
+  const onChange = _.debounce((value) => {
+    console.log("Slate Value", value);
+  }, 500);
+
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const events: any[] = [];
     for (const name in editorState.plugins) {
@@ -155,7 +157,7 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
   };
 
   return (
-    <Slate editor={editor} initialValue={initialValue}>
+    <Slate editor={editor} onChange={onChange} initialValue={initialValue}>
       <DndContext
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}

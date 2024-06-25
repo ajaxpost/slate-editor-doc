@@ -1,7 +1,7 @@
-import { EditorType } from '../preset/types';
-import { generateId } from '../utils/generateId';
-import { HOTKEYS } from '../utils/hotkeys';
-import { Path, Editor, Transforms, Node } from 'slate';
+import { EditorType } from "../preset/types";
+import { generateId } from "../utils/generateId";
+import { HOTKEYS } from "../utils/hotkeys";
+import { Path, Editor, Transforms, Node } from "slate";
 
 export const onKeyDown = (editor: EditorType) => {
   return (event: React.KeyboardEvent) => {
@@ -21,9 +21,9 @@ export const onKeyDown = (editor: EditorType) => {
       if (isStart || isEnd) {
         event.preventDefault();
         const defaultBlock: Node = {
-          type: 'paragraph',
+          type: "paragraph",
           id: generateId(),
-          children: [{ text: '' }],
+          children: [{ text: "" }],
           props: {},
         };
 
