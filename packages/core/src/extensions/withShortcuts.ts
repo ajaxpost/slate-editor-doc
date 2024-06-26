@@ -7,8 +7,8 @@ import {
   TextUnit,
   Transforms,
   Node,
-} from "slate";
-import { EditorType, SlateElement } from "../preset/types";
+} from 'slate';
+import { EditorType, SlateElement } from '../preset/types';
 
 export const withShortcuts = (editor: EditorType, slate: Editor) => {
   const { insertText, deleteBackward } = slate;
@@ -17,12 +17,12 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
     const { selection } = slate;
 
     // Range.isCollapsed => 如果选区是空的，返回 true
-    if (text === " " && selection && Range.isCollapsed(selection)) {
+    if (text === ' ' && selection && Range.isCollapsed(selection)) {
       const { anchor } = selection;
 
       const blockEntry = Editor.above(slate, {
         match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
-        mode: "lowest", // mode: 'lowest' 的作用，它是一个遍历模式，有三个值：'lowest'、'highest'、'all'。'lowest' 表示从当前节点开始，向上遍历，直到找到第一个符合条件的节点；'highest' 表示从当前节点开始，向上遍历，直到找到最后一个符合条件的节点；'all' 表示从当前节点开始，向上遍历，找到所有符合条件的节点。
+        mode: 'lowest', // mode: 'lowest' 的作用，它是一个遍历模式，有三个值：'lowest'、'highest'、'all'。'lowest' 表示从当前节点开始，向上遍历，直到找到第一个符合条件的节点；'highest' 表示从当前节点开始，向上遍历，直到找到最后一个符合条件的节点；'all' 表示从当前节点开始，向上遍历，找到所有符合条件的节点。
       });
       if (!blockEntry) return;
       const [, currentNodePath] = blockEntry;
@@ -34,7 +34,7 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
         Element.isElement(parentNodeElement) &&
         !Text.isText(parentNodeElement.children[0])
       ) {
-        console.log("parent node is not text");
+        console.log('parent node is not text');
 
         return insertText(text);
       }
@@ -70,14 +70,14 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
       const text = Editor.string(slate, parentPath);
       const match = Editor.above<SlateElement>(slate, {
         match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
-        mode: "lowest",
+        mode: 'lowest',
       });
       if (!match) return;
       const [node, path] = match;
 
       if (text.trim().length === 0) {
         // 如果当前节点type是paragraph并且文本为空,删除当前节点
-        if (node.type === "paragraph") {
+        if (node.type === 'paragraph') {
           Transforms.delete(slate, {
             at: parentPath,
           });
@@ -89,7 +89,7 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
             });
           } else {
             // 如果当前节点不是paragraph,就将当前节点的type改为paragraph
-            Transforms.setNodes(slate, { type: "paragraph" });
+            Transforms.setNodes(slate, { type: 'paragraph' });
           }
         }
       }

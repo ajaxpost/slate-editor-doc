@@ -8,6 +8,7 @@ export const withNodeId = (slate: Editor) => {
     if (operation.type === 'split_node') {
       // @ts-ignore
       operation.properties.id = generateId();
+
       return apply(operation);
     }
 

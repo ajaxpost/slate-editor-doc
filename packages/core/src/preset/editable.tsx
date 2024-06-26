@@ -1,38 +1,38 @@
-import { FC, useMemo, useState } from "react";
-import { Descendant, Transforms, createEditor } from "slate";
-import { withHistory } from "slate-history";
+import { FC, useMemo, useState } from 'react';
+import { Descendant, Transforms, createEditor } from 'slate';
+import { withHistory } from 'slate-history';
 import {
   Editable as _Editable,
   RenderElementProps,
   RenderLeafProps,
   Slate,
   withReact,
-} from "slate-react";
-import { useEditorState, useReadOnly } from "../context/editor-context";
-import DefaultElement from "../components/Editor/DefaultElement";
-import { css } from "@emotion/css";
-import { generateId } from "../utils/generateId";
-import { withShortcuts } from "../extensions/withShortcuts";
-import { EVENT_HANDLERS } from "../handlers";
+} from 'slate-react';
+import { useEditorState, useReadOnly } from '../context/editor-context';
+import DefaultElement from '../components/Editor/DefaultElement';
+import { css } from '@emotion/css';
+import { generateId } from '../utils/generateId';
+import { withShortcuts } from '../extensions/withShortcuts';
+import { EVENT_HANDLERS } from '../handlers';
 import {
   DndContext,
   DragEndEvent,
   DragStartEvent,
   UniqueIdentifier,
-} from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
-import { withNodeId } from "../extensions/withNodeId";
-import SortableElement from "../components/Editor/SortableElement";
-import "./editable.css";
-import { EditorType } from "./types";
-import TextLeaf from "../components/TextLeaf/TextLeaf";
-import { HOTKEYS } from "../utils/hotkeys";
-import _ from "lodash";
+} from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
+import { withNodeId } from '../extensions/withNodeId';
+import SortableElement from '../components/Editor/SortableElement';
+import './editable.css';
+import { EditorType } from './types';
+import TextLeaf from '../components/TextLeaf/TextLeaf';
+import { HOTKEYS } from '../utils/hotkeys';
+import _ from 'lodash';
 
 const initialValue: Descendant[] = [
   {
-    type: "paragraph",
-    children: [{ text: "A line of text in a paragraph." }],
+    type: 'paragraph',
+    children: [{ text: 'A line of text in a paragraph.' }],
     id: generateId(),
   },
 ];
@@ -53,7 +53,7 @@ const renderElementContent = (
   return <ElementComponent {...props} />;
 };
 
-const getMappedElements = (plugins: EditorType["plugins"]) => {
+const getMappedElements = (plugins: EditorType['plugins']) => {
   const map: Record<
     string,
     ((props: RenderElementProps) => JSX.Element) | undefined
@@ -90,13 +90,14 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
     return (
       <SortableElement
         {...props}
+        items={items}
         renderElement={() => renderElementContent(ElementComponent, props)}
       />
     );
   };
 
   const renderLeaf = (props: RenderLeafProps) => {
-    const showPlaceholder = props.leaf.text === "";
+    const showPlaceholder = props.leaf.text === '';
 
     return (
       <TextLeaf
@@ -109,7 +110,7 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
   };
 
   const onChange = _.debounce((value) => {
-    console.log("Slate Value", value);
+    console.log('Slate Value', value);
   }, 500);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -166,7 +167,7 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
         <SortableContext items={items}>
           <_Editable
             className={css`
-              width: ${width ? `${width}px` : "100%"};
+              width: ${width ? `${width}px` : '100%'};
               padding-left: 2rem;
               padding-right: 2rem;
               padding-bottom: 20vh;

@@ -1,5 +1,10 @@
-import { EditorType, HOTKEYS_TYPE, SlateElement } from "@slate-doc/core";
-import { Editor, Element } from "slate";
+import {
+  EditorType,
+  HOTKEYS_TYPE,
+  SlateElement,
+  generateId,
+} from '@slate-doc/core';
+import { Editor, Element, Path, Transforms } from 'slate';
 
 export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
   return (event: React.KeyboardEvent) => {
@@ -9,15 +14,35 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
     const match = Editor.above<SlateElement>(slate, {
       at: slate.selection,
       match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+      mode: 'highest',
     });
     if (!match) return;
-    const [node] = match;
-    if (node.type === "blockquote") {
+    const [node, path] = match;
+
+    if (node.type === 'blockquote') {
       if (hotkeys.isEnter(event)) {
         event.preventDefault();
-        Editor.withoutNormalizing(slate, () => {
-          Editor.insertBreak(slate);
-        });
+
+        if (!Path.isParent(path, slate.selection.anchor.path)) {
+          Editor.withoutNormalizing(slate, () => {
+            Transforms.insertNodes(
+              slate,
+              {
+                ...node,
+                id: generateId(),
+                children: [{ text: '' }],
+              },
+              {
+                at: Path.next(path),
+                select: true,
+              }
+            );
+          });
+        } else {
+          Editor.withoutNormalizing(slate, () => {
+            Editor.insertBreak(slate);
+          });
+        }
       }
     }
   };

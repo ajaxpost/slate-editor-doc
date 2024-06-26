@@ -5,10 +5,9 @@ import {
   RenderElementProps,
   SlateElement,
   buildBlockElement,
-} from "@slate-doc/core";
-import { css } from "@emotion/css";
-import { Editor, Transforms, Element } from "slate";
-import { onKeyDown } from "../events/onKeyDown";
+} from '@slate-doc/core';
+import { css } from '@emotion/css';
+import { Editor, Transforms, Element } from 'slate';
 
 const HeadingOneRender = (props: RenderElementProps) => {
   return (
@@ -28,23 +27,20 @@ const HeadingOneRender = (props: RenderElementProps) => {
 };
 
 const HeaderOne = new EditorPlugin({
-  type: "heading-one",
+  type: 'heading-one',
   elements: {
     render: HeadingOneRender,
     props: {
-      nodeType: "block",
+      nodeType: 'block',
     },
   },
-  events: {
-    onKeyDown,
-  },
   options: {
-    shortcuts: ["#", "h1"],
+    shortcuts: ['#', 'h1'],
     create: (editor: EditorType, element: Partial<PluginElement>) => {
       const slate = editor.slate;
       if (!slate || !slate.selection) return;
       const elementNode = buildBlockElement({
-        type: "heading-one",
+        type: 'heading-one',
         props: element.props,
       });
       const match = Editor.above<SlateElement>(slate, {
@@ -55,7 +51,7 @@ const HeaderOne = new EditorPlugin({
       const [node] = match;
       if (!node) return;
 
-      if (node.type === "paragraph") {
+      if (node.type === 'paragraph') {
         Transforms.setNodes(slate, elementNode, {
           match: (n) => {
             return !Editor.isEditor(n) && Element.isElement(n);

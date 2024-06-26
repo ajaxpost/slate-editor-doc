@@ -1,11 +1,13 @@
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { RenderElementProps } from 'slate-react';
 import { useReadOnly } from '../../context/editor-context';
 import { css } from '@emotion/css';
+import clsx from 'clsx';
 
 type IProps = {
   renderElement: (props: any) => JSX.Element;
+  items: string[];
 } & RenderElementProps;
 
 type SortableProps = {
@@ -38,11 +40,27 @@ const SortableElement: FC<IProps> = ({
   attributes,
   element,
   children,
+  items,
 }) => {
   const readOnly = useReadOnly();
   const sortable = useSortable({ id: element.id || '' });
-  const { isDragging, isOver } = sortable;
+  const { isDragging, isOver, over, active } = sortable;
   const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
+  const [position, setPosition] = useState('');
+
+  useEffect(() => {
+    if (!isDragging && active && over) {
+      const oldIndex = items.indexOf(active.id as string);
+      const newIndex = items.indexOf(over.id as string);
+      if (oldIndex !== newIndex) {
+        if (newIndex > oldIndex) {
+          setPosition('down');
+        } else {
+          setPosition('up');
+        }
+      }
+    }
+  }, [items, isDragging, active, over]);
 
   const handleMouseEnter = () => {
     if (readOnly) return;
@@ -66,10 +84,10 @@ const SortableElement: FC<IProps> = ({
       data-hovered={isHovered}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{
-        borderBottom:
-          isOver && !isDragging ? '2px solid rgb(0,122,255)' : 'none',
-      }}
+      className={clsx({
+        'editor-block-up': position === 'up' && !isDragging && isOver,
+        'editor-block-down': position === 'down' && !isDragging && isOver,
+      })}
     >
       <Sortable sortable={sortable}>
         <div

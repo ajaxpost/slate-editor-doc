@@ -1,13 +1,7 @@
-import { Editor, Node } from "slate";
-import {
-  Plugin,
-  PluginElement,
-  PluginElementsMap,
-  Shortcut,
-} from "../plugins/type";
-import { EditorType, SlateElement } from "../preset/types";
-import { createBlock } from "../transforms/createBlocks";
-import { generateId } from "./generateId";
+import { Editor, Element } from 'slate';
+import { Plugin, PluginElement, Shortcut } from '../plugins/type';
+import { EditorType, SlateElement } from '../preset/types';
+import { generateId } from './generateId';
 
 export function buildPlugins(plugins: Plugin<string>[]) {
   const pluginsMap: Record<string, Plugin<string>> = {};
@@ -42,7 +36,7 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
   plugins.forEach((plugin) => {
     const elements: Partial<PluginElement> = {};
     for (const key in plugin.elements) {
-      if (key !== "render") {
+      if (key !== 'render') {
         elements[key] = plugin.elements[key];
       }
     }
@@ -66,12 +60,16 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
             // 判断一下当前所在行这个type是否与要生成的type相同
             // 如果相同返回true
             const slate = editor.slate;
+
             if (!slate) return false;
-            // @ts-ignore
-            const [node] = Editor.above(slate, {
+            const match = Editor.above<SlateElement>(slate, {
               at: slate.selection!,
+              match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
             });
-            return Object.keys(elements).includes(node?.type);
+            if (!match) return false;
+            const [node] = match;
+
+            return plugin.type === node?.type;
           },
         };
       });
@@ -82,10 +80,10 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
 
 export const buildBlockElement = (element?: Partial<SlateElement>) => ({
   id: generateId(),
-  type: element?.type || "paragraph",
-  children: element?.children || [{ text: "" }],
+  type: element?.type || 'paragraph',
+  children: element?.children || [{ text: '' }],
   props: {
-    nodeType: "block",
+    nodeType: 'block',
     ...element?.props,
   },
 });

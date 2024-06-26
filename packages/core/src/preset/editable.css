@@ -22,3 +22,10 @@ button {
   font-size: 15px;
   display: inline-flex;
 }
+
+.editor-block-up {
+  border-top: 2px solid rgb(0, 122, 255);
+}
+.editor-block-down {
+  border-bottom: 2px solid rgb(0, 122, 255);
+}
