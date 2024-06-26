@@ -1,5 +1,15 @@
-import { EditorPlugin, RenderElementProps, useReadOnly } from '@slate-doc/core';
+import {
+  EditorPlugin,
+  EditorType,
+  PluginElement,
+  RenderElementProps,
+  SlateElement,
+  buildBlockElement,
+  useReadOnly,
+} from '@slate-doc/core';
 import { css } from '@emotion/css';
+import { Transforms, Editor, Element } from 'slate';
+import { onKeyDown } from '../events/onKeyDown';
 
 const CalloutRender = (props: RenderElementProps) => {
   const readOnly = useReadOnly();
@@ -99,18 +109,48 @@ const CalloutRender = (props: RenderElementProps) => {
 };
 
 const Callout = new EditorPlugin({
-  type: 'Callout',
+  type: 'callout',
   elements: {
-    callout: {
-      render: CalloutRender,
-      props: {
-        nodeType: 'block',
-        theme: 'default',
-      },
+    render: CalloutRender,
+    props: {
+      nodeType: 'block',
+      theme: 'default',
     },
   },
+  events: { onKeyDown },
   options: {
     shortcuts: ['<'],
+    create: (editor: EditorType, element: Partial<PluginElement>) => {
+      const slate = editor.slate;
+      if (!slate || !slate.selection) return;
+      const elementNode = buildBlockElement({
+        type: 'callout',
+        props: element.props,
+      });
+      const match = Editor.above<SlateElement>(slate, {
+        at: slate.selection,
+        match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+      });
+      if (!match) return;
+      const [node] = match;
+      if (!node) return;
+
+      Editor.withoutNormalizing(slate, () => {
+        Transforms.wrapNodes(slate, elementNode, {
+          split: true,
+        });
+        Transforms.setNodes(slate, {
+          ...node,
+          props: {
+            ...node.props,
+            wrap: true,
+          },
+        });
+      });
+    },
+    match(editor) {
+      return true;
+    },
   },
 });
 

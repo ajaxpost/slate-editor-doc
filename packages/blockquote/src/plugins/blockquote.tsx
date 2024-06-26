@@ -3,11 +3,12 @@ import {
   EditorType,
   PluginElement,
   RenderElementProps,
+  SlateElement,
   buildBlockElement,
-} from "@slate-doc/core";
-import { css } from "@emotion/css";
-import { onKeyDown } from "../events/onKeyDown";
-import { Editor, Transforms, Element } from "slate";
+} from '@slate-doc/core';
+import { css } from '@emotion/css';
+import { onKeyDown } from '../events/onKeyDown';
+import { Editor, Transforms, Element } from 'slate';
 
 const BlockQuoteRender = (props: RenderElementProps) => {
   return (
@@ -33,30 +34,43 @@ const BlockQuoteRender = (props: RenderElementProps) => {
 };
 
 const BlockQuote = new EditorPlugin({
-  type: "blockquote",
+  type: 'blockquote',
   elements: {
     render: BlockQuoteRender,
     props: {
-      nodeType: "block",
+      nodeType: 'block',
     },
   },
   events: {
     onKeyDown,
   },
   options: {
-    shortcuts: [">", "blockquote"],
+    shortcuts: ['>', 'blockquote'],
     create: (editor: EditorType, element: Partial<PluginElement>) => {
       const slate = editor.slate;
       if (!slate || !slate.selection) return;
       const elementNode = buildBlockElement({
-        type: "blockquote",
+        type: 'blockquote',
         props: element.props,
       });
-      Transforms.setNodes(slate, elementNode, {
-        match: (n) => {
-          return !Editor.isEditor(n) && Element.isElement(n);
-        },
-        mode: "highest",
+      const match = Editor.above<SlateElement>(slate, {
+        at: slate.selection,
+        match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+      });
+      if (!match) return;
+      const [node] = match;
+      if (!node) return;
+      Editor.withoutNormalizing(slate, () => {
+        Transforms.wrapNodes(slate, elementNode, {
+          split: true,
+        });
+        Transforms.setNodes(slate, {
+          ...node,
+          props: {
+            ...node.props,
+            wrap: true,
+          },
+        });
       });
     },
     match(editor) {

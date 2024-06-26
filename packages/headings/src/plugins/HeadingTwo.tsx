@@ -8,6 +8,7 @@ import {
 } from '@slate-doc/core';
 import { css } from '@emotion/css';
 import { Editor, Element, Transforms } from 'slate';
+import { create } from '../opts/create';
 
 const HeadingTwoRender = (props: RenderElementProps) => {
   return (
@@ -17,6 +18,7 @@ const HeadingTwoRender = (props: RenderElementProps) => {
       data-node-type={props.element.props?.nodeType}
       data-wrap={props.element.props?.wrap}
       className={css`
+        position: relative;
         margin: 0;
         ${!props.element.props?.wrap
           ? `
@@ -41,52 +43,7 @@ const HeaderTwo = new EditorPlugin({
   },
   options: {
     shortcuts: ['##', 'h2'],
-    create: (editor: EditorType, element: Partial<PluginElement>) => {
-      const slate = editor.slate;
-      if (!slate || !slate.selection) return;
-      const elementNode = buildBlockElement({
-        type: 'heading-two',
-        props: element.props,
-      });
-      const match = Editor.above<SlateElement>(slate, {
-        at: slate.selection,
-        match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
-      });
-      if (!match) return;
-      const [node] = match;
-      if (!node) return;
-
-      if (node.type === 'paragraph') {
-        Transforms.setNodes(slate, elementNode, {
-          match: (n) => {
-            return !Editor.isEditor(n) && Element.isElement(n);
-          },
-        });
-      } else {
-        Editor.withoutNormalizing(slate, () => {
-          Transforms.wrapNodes(slate, node, {
-            match: (n) => {
-              return !Editor.isEditor(n) && Element.isElement(n);
-            },
-          });
-          Transforms.setNodes(
-            slate,
-            {
-              ...elementNode,
-              props: {
-                ...elementNode.props,
-                wrap: true,
-              },
-            },
-            {
-              match: (n) => {
-                return !Editor.isEditor(n) && Element.isElement(n);
-              },
-            }
-          );
-        });
-      }
-    },
+    create: create('heading-two'),
     match(elements) {
       return true;
     },

@@ -1,13 +1,4 @@
-import {
-  Editor,
-  Element,
-  Path,
-  Range,
-  Text,
-  TextUnit,
-  Transforms,
-  Node,
-} from 'slate';
+import { Editor, Element, Path, Range, TextUnit, Transforms } from 'slate';
 import { EditorType, SlateElement } from '../preset/types';
 
 export const withShortcuts = (editor: EditorType, slate: Editor) => {
@@ -26,18 +17,6 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
       });
       if (!blockEntry) return;
       const [, currentNodePath] = blockEntry;
-      const parentEntry = Editor.parent(slate, currentNodePath);
-      // 获取当前节点的父节点
-      const [parentNodeElement] = parentEntry;
-
-      if (
-        Element.isElement(parentNodeElement) &&
-        !Text.isText(parentNodeElement.children[0])
-      ) {
-        console.log('parent node is not text');
-
-        return insertText(text);
-      }
 
       const path = blockEntry ? currentNodePath : [];
       const start = Editor.start(slate, path);
@@ -73,7 +52,7 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
         mode: 'lowest',
       });
       if (!match) return;
-      const [node, path] = match;
+      const [node] = match;
 
       if (text.trim().length === 0) {
         // 如果当前节点type是paragraph并且文本为空,删除当前节点
@@ -82,15 +61,8 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
             at: parentPath,
           });
         } else {
-          if (path.length >= 2) {
-            Transforms.unwrapNodes(slate, {
-              at: parentPath,
-              match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
-            });
-          } else {
-            // 如果当前节点不是paragraph,就将当前节点的type改为paragraph
-            Transforms.setNodes(slate, { type: 'paragraph' });
-          }
+          // 如果当前节点不是paragraph,就将当前节点的type改为paragraph
+          Transforms.setNodes(slate, { type: 'paragraph' });
         }
       }
     } else {

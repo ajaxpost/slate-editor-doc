@@ -2,10 +2,9 @@ import {
   EditorType,
   HOTKEYS_TYPE,
   SlateElement,
-  buildBlockElement,
   generateId,
 } from '@slate-doc/core';
-import { Editor, Element, Path, Transforms } from 'slate';
+import { Editor, Element, Transforms } from 'slate';
 
 export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
   return (event: React.KeyboardEvent) => {
@@ -22,7 +21,7 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
     const [parentNodeElement, parentPath] = parentEntry;
     if (!Element.isElement(parentNodeElement)) return;
 
-    if (parentNodeElement.type === 'blockquote') {
+    if (parentNodeElement.type === 'callout') {
       if (hotkeys.isEnter(event)) {
         event.preventDefault();
 
@@ -30,46 +29,63 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
           Transforms.insertNodes(
             slate,
             {
-              ...parentNodeElement,
+              ...currentNode,
+              props: {
+                ...currentNode.props,
+                wrap: true,
+              },
               id: generateId(),
-              children: [
-                {
-                  ...currentNode,
-                  id: generateId(),
-                  children: [{ text: '' }],
-                },
-              ],
+              children: [{ text: '' }],
             },
             {
-              at: Path.next(parentPath),
               select: true,
             }
           );
-          if (currentNode.type.includes('heading'))
+          if (currentNode.type.includes('heading')) {
             Transforms.setNodes(slate, {
               type: 'paragraph',
             });
+          }
         });
       }
+
       if (hotkeys.isBackspace(event)) {
         const text = Editor.string(slate, currentNodePath);
         if (text.trim().length === 0) {
           event.preventDefault();
+
+          const isStart = Editor.isStart(
+            slate,
+            slate.selection.anchor,
+            parentPath
+          );
+          if (isStart) {
+            Editor.withoutNormalizing(slate, () => {
+              if (currentNode.type !== 'paragraph') {
+                Transforms.setNodes(slate, {
+                  type: 'paragraph',
+                });
+              } else {
+                Transforms.unwrapNodes(slate, {
+                  at: parentPath,
+                });
+                Transforms.setNodes(slate, {
+                  props: {
+                    wrap: false,
+                  },
+                });
+              }
+            });
+
+            return;
+          }
           if (currentNode.type !== 'paragraph') {
             Transforms.setNodes(slate, {
               type: 'paragraph',
             });
           } else {
             Transforms.removeNodes(slate, {
-              at: parentPath,
-            });
-            const elementNode = buildBlockElement({
-              type: 'paragraph',
-              props: {},
-            });
-            Transforms.insertNodes(slate, elementNode, {
-              at: parentPath,
-              select: true,
+              at: currentNodePath,
             });
           }
         }
