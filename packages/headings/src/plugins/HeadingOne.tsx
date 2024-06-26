@@ -15,10 +15,15 @@ const HeadingOneRender = (props: RenderElementProps) => {
       {...props.attributes}
       data-element-type={props.element.type}
       data-node-type={props.element.props?.nodeType}
+      data-wrap={props.element.props?.wrap}
       className={css`
         margin: 0;
-        margin-top: 1.5rem;
+        ${!props.element.props?.wrap
+          ? `
+          margin-top: 1.5rem;
         margin-bottom: 0.5rem;
+          `
+          : ''}
       `}
     >
       {props.children}

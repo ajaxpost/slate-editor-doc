@@ -5,9 +5,9 @@ import {
   RenderElementProps,
   SlateElement,
   buildBlockElement,
-} from "@slate-doc/core";
-import { css } from "@emotion/css";
-import { Editor, Element, Transforms } from "slate";
+} from '@slate-doc/core';
+import { css } from '@emotion/css';
+import { Editor, Element, Transforms } from 'slate';
 
 const HeadingThreeRender = (props: RenderElementProps) => {
   return (
@@ -15,10 +15,15 @@ const HeadingThreeRender = (props: RenderElementProps) => {
       {...props.attributes}
       data-element-type={props.element.type}
       data-node-type={props.element.props?.nodeType}
+      data-wrap={props.element.props?.wrap}
       className={css`
         margin: 0;
-        margin-top: 0.5rem;
+        ${!props.element.props?.wrap
+          ? `
+          margin-top: 0.5rem;
         margin-bottom: 0.5rem;
+          `
+          : ''}
       `}
     >
       {props.children}
@@ -27,20 +32,20 @@ const HeadingThreeRender = (props: RenderElementProps) => {
 };
 
 const HeaderThree = new EditorPlugin({
-  type: "heading-three",
+  type: 'heading-three',
   elements: {
     render: HeadingThreeRender,
     props: {
-      nodeType: "block",
+      nodeType: 'block',
     },
   },
   options: {
-    shortcuts: ["###", "h3"],
+    shortcuts: ['###', 'h3'],
     create: (editor: EditorType, element: Partial<PluginElement>) => {
       const slate = editor.slate;
       if (!slate || !slate.selection) return;
       const elementNode = buildBlockElement({
-        type: "heading-three",
+        type: 'heading-three',
         props: element.props,
       });
       const match = Editor.above<SlateElement>(slate, {
@@ -51,7 +56,7 @@ const HeaderThree = new EditorPlugin({
       const [node] = match;
       if (!node) return;
 
-      if (node.type === "paragraph") {
+      if (node.type === 'paragraph') {
         Transforms.setNodes(slate, elementNode, {
           match: (n) => {
             return !Editor.isEditor(n) && Element.isElement(n);
