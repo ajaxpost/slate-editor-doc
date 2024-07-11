@@ -15,16 +15,10 @@ https://codesandbox.io/p/sandbox/slate-dnd-kit-brld4z?file=%2Fsrc%2FApp.js%3A87%
 
 - [x] 拖拽
 
-yarn pdc
-yarn pdp
-yarn dev
-
 待解决的问题:
-
-1. 在blockquote进行回车换行出现的问题
-2. 在blockquote中嵌套其他节点出现的问题(可以理解为和上一个是同一个问题)
-   a. 嵌套节点后再进行回车,渲染就会出现问题
 
 待实现的功能:
 
-1. 在 headings 中嵌套 blockquote 节点
+1. 实现 按下 Ctrl + Enter 切入到下一行中
+2. 按下 / 弹出菜单列表
+3. 链接leaf,参考语雀

@@ -5,7 +5,7 @@ export const withNodeId = (slate: Editor) => {
   const { apply } = slate;
 
   slate.apply = (operation) => {
-    if (operation.type === 'split_node') {
+    if (operation.type === 'split_node' && operation.path.length === 1) {
       // @ts-ignore
       operation.properties.id = generateId();
 

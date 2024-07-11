@@ -1,37 +1,28 @@
 import { Editor, Element } from 'slate';
-import { Plugin, PluginElement, Shortcut } from '../plugins/type';
+import { LeafPlugin, Plugin, PluginElement, Shortcut } from '../plugins/type';
 import { EditorType, SlateElement } from '../preset/types';
-import { generateId } from './generateId';
 
-export function buildPlugins(plugins: Plugin<string>[]) {
-  const pluginsMap: Record<string, Plugin<string>> = {};
+export function buildPlugins(plugins: (Plugin | LeafPlugin)[]) {
+  const pluginsMap: Record<string, Plugin> = {};
+  const leafPluginMap: Record<string, LeafPlugin> = {};
 
   plugins.forEach((plugin) => {
-    // if (plugin.elements) {
-    //   Object.keys(plugin.elements).forEach((type) => {
-    //     const element = plugin.elements[type];
-    //     const nodeType = element.props?.nodeType;
-
-    //     if (nodeType === 'inline' || nodeType === 'inlineVoid') {
-    //       inlineTopLevelPlugins[type] = element;
-    //     }
-    //   });
-    // }
-
-    pluginsMap[plugin.type] = plugin;
-  });
-  plugins.forEach((plugin) => {
-    if (plugin.elements) {
-      const elements = { ...plugin.elements };
-      pluginsMap[plugin.type] = { ...plugin, elements };
+    const props = plugin.elements.props;
+    if (props?.nodeType === 'inline') {
+      leafPluginMap[plugin.type] = plugin as LeafPlugin;
+    } else {
+      pluginsMap[plugin.type] = plugin as Plugin;
     }
   });
 
-  return pluginsMap;
+  return {
+    pluginsMap,
+    leafPluginMap,
+  };
 }
 
-export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
-  const map: Record<string, Shortcut<string>> = {};
+export function buildShortcuts(editor: EditorType, plugins: Plugin[]) {
+  const map: Record<string, Shortcut> = {};
 
   plugins.forEach((plugin) => {
     const elements: Partial<PluginElement> = {};
@@ -43,7 +34,7 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
     const {
       shortcuts = [],
       create = () => {},
-      match = () => true,
+      embedded = false,
     } = plugin.options || {};
     if (shortcuts.length) {
       shortcuts.forEach((shortcut) => {
@@ -52,9 +43,10 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
           elements,
           options: {
             shortcuts,
+            embedded,
           },
-          create: () => {
-            create(editor, elements);
+          create: (context) => {
+            create(editor, elements, context);
           },
           isActive: () => {
             // 判断一下当前所在行这个type是否与要生成的type相同
@@ -65,11 +57,12 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
             const match = Editor.above<SlateElement>(slate, {
               at: slate.selection!,
               match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+              mode: 'highest',
             });
             if (!match) return false;
             const [node] = match;
 
-            return plugin.type === node?.type;
+            return !!node[plugin.type];
           },
         };
       });
@@ -77,13 +70,3 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin<string>[]) {
   });
   return map;
 }
-
-export const buildBlockElement = (element?: Partial<SlateElement>) => ({
-  id: generateId(),
-  type: element?.type || 'paragraph',
-  children: element?.children || [{ text: '' }],
-  props: {
-    nodeType: 'block',
-    ...element?.props,
-  },
-});

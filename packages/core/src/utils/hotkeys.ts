@@ -1,4 +1,4 @@
-import isHotkey from "is-hotkey";
+import isHotkey from 'is-hotkey';
 
 const create = (key: string) => {
   return (event: React.KeyboardEvent) => {
@@ -7,9 +7,12 @@ const create = (key: string) => {
 };
 
 export const HOTKEYS = {
-  isEnter: create("enter"),
-  isArrowUp: create("up"),
-  isArrowDown: create("down"),
-  isTab: create("tab"),
-  isBackspace: create("backspace"),
+  isEnter: create('enter'),
+  isArrowUp: create('up'),
+  isArrowDown: create('down'),
+  isArrowLeft: create('left'),
+  isArrowRight: create('right'),
+  isTab: create('tab'),
+  isBackspace: create('backspace'),
+  isSlash: create('/'),
 };

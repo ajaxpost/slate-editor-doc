@@ -1,29 +1,55 @@
 import { FC } from 'react';
 import Editable from '@slate-doc/core';
 // import "@slate-doc/core/dist/index.css";
-import { HeaderOne, HeaderTwo, HeaderThree } from '@slate-doc/headings';
+import { Heading } from '@slate-doc/headings';
 import { BlockQuote } from '@slate-doc/blockquote';
 import { Callout } from '@slate-doc/callout';
-// import { BulletedList, NumberedList } from "@slate-doc/lists";
+import { BulletedList, NumberedList } from '@slate-doc/lists';
+import { DividingLine } from '@slate-doc/dividing-line';
+import {
+  Bold,
+  Italic,
+  Strikethrough,
+  Underline,
+  Align,
+  LineCode,
+  FontSize,
+  FontColor,
+} from '@slate-doc/marks';
 
 const plugins = [
-  HeaderOne,
-  HeaderTwo,
-  HeaderThree,
+  Heading,
   BlockQuote,
   Callout,
-  // BulletedList,
-  // NumberedList,
+  BulletedList,
+  NumberedList,
+  DividingLine,
+  Bold,
+  Italic,
+  Strikethrough,
+  Underline,
+  Align,
+  LineCode,
+  FontSize,
+  FontColor,
 ];
 
 const App: FC = () => {
   return (
     <>
+      <style>
+        {`
+      body{
+        margin:0;
+        padding:0;
+      }
+      `}
+      </style>
       <Editable
         plugins={plugins}
         placeholder="Type / to open menu"
         width={600}
-        style={{ margin: '0 auto', marginTop: '50px' }}
+        style={{ margin: '0 auto' }}
       />
     </>
   );

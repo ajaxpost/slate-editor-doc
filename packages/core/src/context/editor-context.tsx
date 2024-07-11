@@ -17,6 +17,7 @@ const DEFAULT_HANDLERS: EditorContextType = {
     plugins: {},
     slate: null,
     shortcuts: {},
+    marks: {},
   },
 };
 

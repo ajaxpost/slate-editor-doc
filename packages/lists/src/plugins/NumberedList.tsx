@@ -1,66 +1,49 @@
-import { EditorPlugin, RenderElementProps } from '@slate-doc/core';
+import { contextType, EditorPlugin } from '@slate-doc/core';
 import { css } from '@emotion/css';
-import { onKeyDown } from '../events/onKeyDown';
+import { onKeyDown } from '../events/onKeyDown_num';
+import { create } from '../opts/create';
 
-const NumberedListRender = (props: RenderElementProps) => {
-  const depth = (props.element.props?.depth || 0) as number;
-  const order = (props.element.props?.order || 0) as number;
-  return (
-    <div
-      {...props.attributes}
-      data-element-type={props.element.type}
-      data-node-type={props.element.props?.nodeType}
-      className={css`
-        align-items: center;
-        display: flex;
-        position: relative;
+const NumberedListRender = (context: contextType) => {
+  const ol = context.props.element['numbered-list'];
+  const li = context.props.element['numbered-item'];
 
-        font-size: 16px;
-        line-height: 1.75rem;
-        padding-bottom: 2px;
-        padding-left: 1rem;
-        padding-top: 2px;
-
-        margin-left: ${depth * 20}px;
-      `}
-    >
-      <span
+  if (ol) {
+    return (
+      <ol
         className={css`
-          font-weight: 700;
-          left: 0;
-          min-width: 10px;
-          position: absolute;
-          top: 0;
-          user-select: none;
-          -webkit-user-select: none;
-          width: auto;
+          margin: 0;
+          padding-left: 20px;
         `}
       >
-        {order + 1}
-      </span>
-      <span
+        {context.children}
+      </ol>
+    );
+  }
+  if (li) {
+    const leval = (li['leval'] || 0) as number;
+    return (
+      <li
         className={css`
-          margin-left: 10px;
-          flex-grow: 1;
+          margin-left: ${leval * 20}px;
+          position: relative;
+          width: 100%;
         `}
       >
-        {props.children}
-      </span>
-    </div>
-  );
+        {context.children}
+      </li>
+    );
+  }
+
+  return context.children;
 };
 
 const NumberedList = new EditorPlugin({
-  type: 'NumberedList',
+  type: 'numbered-list',
   elements: {
-    'numbered-list': {
-      render: NumberedListRender,
-      props: {
-        nodeType: 'block',
-        type: 'numbered-list',
-        depth: 0, // 控制缩进
-        order: 0, // 控制序号
-      },
+    render: NumberedListRender,
+    props: {
+      nodeType: 'block',
+      leval: 0,
     },
   },
   events: {
@@ -68,6 +51,14 @@ const NumberedList = new EditorPlugin({
   },
   options: {
     shortcuts: ['1.'],
+    embedded: true,
+    create: create('numbered-list'),
+    match(context) {
+      return (
+        !!context.props.element['numbered-list'] ||
+        !!context.props.element['numbered-item']
+      );
+    },
   },
 });
 export { NumberedList };

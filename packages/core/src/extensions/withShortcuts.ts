@@ -1,8 +1,9 @@
-import { Editor, Element, Path, Range, TextUnit, Transforms } from 'slate';
-import { EditorType, SlateElement } from '../preset/types';
+import { Editor, Element, Range, Transforms } from 'slate';
+import { EditorType } from '../preset/types';
+import { voids } from './config';
 
 export const withShortcuts = (editor: EditorType, slate: Editor) => {
-  const { insertText, deleteBackward } = slate;
+  const { insertText, isVoid } = slate;
   editor.slate = slate;
   slate.insertText = (text: string) => {
     const { selection } = slate;
@@ -16,7 +17,7 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
         mode: 'lowest', // mode: 'lowest' 的作用，它是一个遍历模式，有三个值：'lowest'、'highest'、'all'。'lowest' 表示从当前节点开始，向上遍历，直到找到第一个符合条件的节点；'highest' 表示从当前节点开始，向上遍历，直到找到最后一个符合条件的节点；'all' 表示从当前节点开始，向上遍历，找到所有符合条件的节点。
       });
       if (!blockEntry) return;
-      const [, currentNodePath] = blockEntry;
+      const [currentNode, currentNodePath] = blockEntry;
 
       const path = blockEntry ? currentNodePath : [];
       const start = Editor.start(slate, path);
@@ -26,11 +27,20 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
       const matchedBlock = editor.shortcuts?.[beforeText];
 
       const hasMatchedBlock = !!matchedBlock;
-
+      const extra = ['align', 'fontSize', 'id', 'children'];
       if (hasMatchedBlock && !matchedBlock.isActive?.()) {
+        const keys = Object.keys(currentNode).filter((o) => !extra.includes(o));
+
+        if (keys.length && !matchedBlock.options.embedded) {
+          insertText(text);
+          return;
+        }
+
         Transforms.select(slate, range);
         Transforms.delete(slate);
-        matchedBlock.create();
+        matchedBlock.create({
+          beforeText,
+        });
 
         return;
       }
@@ -38,36 +48,12 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
 
     insertText(text);
   };
-  slate.deleteBackward = (unit: TextUnit) => {
-    const { selection } = slate;
-    if (!selection) return;
 
-    const parentPath = Path.parent(selection.anchor.path);
-    const isStart = Editor.isStart(slate, selection.anchor, parentPath);
-    // 光标在当前节点的开始位置
-    if (isStart) {
-      const text = Editor.string(slate, parentPath);
-      const match = Editor.above<SlateElement>(slate, {
-        match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
-        mode: 'lowest',
-      });
-      if (!match) return;
-      const [node] = match;
-
-      if (text.trim().length === 0) {
-        // 如果当前节点type是paragraph并且文本为空,删除当前节点
-        if (node.type === 'paragraph') {
-          Transforms.delete(slate, {
-            at: parentPath,
-          });
-        } else {
-          // 如果当前节点不是paragraph,就将当前节点的type改为paragraph
-          Transforms.setNodes(slate, { type: 'paragraph' });
-        }
-      }
-    } else {
-      deleteBackward(unit);
+  slate.isVoid = (element) => {
+    for (const key of Object.keys(element)) {
+      if (voids.includes(key)) return true;
     }
+    return isVoid(element);
   };
 
   return slate;

@@ -2,10 +2,9 @@ import {
   EditorType,
   HOTKEYS_TYPE,
   SlateElement,
-  buildBlockElement,
   generateId,
 } from '@slate-doc/core';
-import { Editor, Element, Path, Transforms } from 'slate';
+import { Editor, Element, Transforms } from 'slate';
 
 export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
   return (event: React.KeyboardEvent) => {
@@ -17,63 +16,43 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
       match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
     });
     if (!match) return;
-    const [currentNode, currentNodePath] = match;
-    const parentEntry = Editor.parent(slate, currentNodePath);
-    const [parentNodeElement, parentPath] = parentEntry;
-    if (!Element.isElement(parentNodeElement)) return;
+    const [node, path] = match;
+    const parentMatch = Editor.parent(slate, path);
+    if (!parentMatch) return;
+    const [parentNode] = parentMatch;
+    if (event.isDefaultPrevented()) return;
+    const extra = ['children', 'blockquote-item', 'align'];
+    const keys = Object.keys(node).filter((o) => !extra.includes(o));
+    if ((!parentNode['blockquote'] && !node['blockquote-item']) || keys.length)
+      return;
 
-    if (parentNodeElement.type === 'blockquote') {
-      if (hotkeys.isEnter(event)) {
-        event.preventDefault();
+    const text = Editor.string(slate, path);
+    if (!text && (hotkeys.isBackspace(event) || hotkeys.isEnter(event))) {
+      event.preventDefault();
 
-        Editor.withoutNormalizing(slate, () => {
-          Transforms.insertNodes(
-            slate,
-            {
-              ...parentNodeElement,
-              id: generateId(),
-              children: [
-                {
-                  ...currentNode,
-                  id: generateId(),
-                  children: [{ text: '' }],
-                },
-              ],
-            },
-            {
-              at: Path.next(parentPath),
-              select: true,
-            }
+      Transforms.unwrapNodes(slate, {
+        split: true,
+        match(n) {
+          return (
+            Element.isElement(n) &&
+            Editor.isBlock(slate, n) &&
+            !!n['blockquote']
           );
-          if (currentNode.type.includes('heading'))
-            Transforms.setNodes(slate, {
-              type: 'paragraph',
-            });
-        });
-      }
-      if (hotkeys.isBackspace(event)) {
-        const text = Editor.string(slate, currentNodePath);
-        if (text.trim().length === 0) {
-          event.preventDefault();
-          if (currentNode.type !== 'paragraph') {
-            Transforms.setNodes(slate, {
-              type: 'paragraph',
-            });
-          } else {
-            Transforms.removeNodes(slate, {
-              at: parentPath,
-            });
-            const elementNode = buildBlockElement({
-              type: 'paragraph',
-              props: {},
-            });
-            Transforms.insertNodes(slate, elementNode, {
-              at: parentPath,
-              select: true,
-            });
-          }
-        }
-      }
+        },
+      });
+      Transforms.unsetNodes(slate, 'blockquote-item');
+      Transforms.setNodes(slate, {
+        id: generateId(),
+      });
+      return;
+    }
+    if (hotkeys.isEnter(event)) {
+      event.preventDefault();
+
+      Transforms.insertNodes(slate, {
+        ...node,
+        children: [{ ...node.children[0], text: '' }],
+      });
     }
   };
 }

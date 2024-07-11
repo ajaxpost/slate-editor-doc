@@ -5,25 +5,18 @@ import { EditorType } from './preset/types';
 import { generateId } from './utils/generateId';
 import { EditorPlugin } from './plugins/createEditorPlugin';
 import { buildPlugins, buildShortcuts } from './utils/editorBuilders';
-import { Plugin } from './plugins/type';
+import { css } from '@emotion/css';
+import { ConfigProvider } from 'antd';
 
 type IProps = {
   // value?: EditorContentValue;
-  plugins: EditorPlugin<string>[];
+  plugins: EditorPlugin[];
   placeholder?: string;
   readonly?: boolean;
   width?: number;
   style?: React.CSSProperties;
   className?: string;
 };
-
-function validateInitialValue(value: unknown): boolean {
-  if (!value) return false;
-  if (typeof value !== 'object') return false;
-  if (Object.keys(value).length === 0) return false;
-
-  return true;
-}
 
 const SlateEditor: FC<IProps> = ({
   plugins: _plugins,
@@ -34,17 +27,19 @@ const SlateEditor: FC<IProps> = ({
   className,
 }) => {
   const plugins = useMemo(() => {
-    return _plugins.map((plugin) => plugin.getPlugin as Plugin<string>);
+    return _plugins.map((plugin) => plugin.getPlugin);
   }, [_plugins]);
 
   const [editorState] = useState<EditorContextType>(() => {
     const editor = {} as EditorType;
     if (!editor.id) editor.id = generateId();
-    // if (!validateInitialValue(value)) {
-    // }
+
+    const map = buildPlugins(plugins);
+
     editor.readOnly = readonly;
-    editor.plugins = buildPlugins(plugins);
-    editor.shortcuts = buildShortcuts(editor, plugins);
+    editor.plugins = map.pluginsMap;
+    editor.marks = map.leafPluginMap;
+    editor.shortcuts = buildShortcuts(editor, Object.values(map.pluginsMap));
     editor.placeholder = placeholder;
     return {
       editor,
@@ -54,9 +49,27 @@ const SlateEditor: FC<IProps> = ({
   console.log(editorState);
 
   return (
-    <EditorProvider editorState={editorState}>
-      <Editable width={width} style={style} className={className} />
-    </EditorProvider>
+    <ConfigProvider
+      theme={{
+        token: {
+          motion: false,
+          borderRadius: 0,
+          borderRadiusLG: 0,
+          borderRadiusOuter: 0,
+          borderRadiusSM: 0,
+          borderRadiusXS: 0,
+        },
+        components: {
+          Tooltip: {
+            colorBgSpotlight: '#404040',
+          },
+        },
+      }}
+    >
+      <EditorProvider editorState={editorState}>
+        <Editable width={width} style={style} className={className} />
+      </EditorProvider>
+    </ConfigProvider>
   );
 };
 

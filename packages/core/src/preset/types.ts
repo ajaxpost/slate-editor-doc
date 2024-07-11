@@ -1,22 +1,22 @@
-import type { Descendant, Editor, BaseEditor, Node } from "slate";
-import { Plugin, Shortcut } from "../plugins/type";
-import { ReactEditor } from "slate-react";
-import { HistoryEditor } from "slate-history";
+import type { Descendant, Editor, BaseEditor } from 'slate';
+import { LeafPlugin, Plugin, Shortcut } from '../plugins/type';
+import { ReactEditor } from 'slate-react';
+import { HistoryEditor } from 'slate-history';
 
 export interface EditorType {
   id: string;
   readOnly: boolean;
-  plugins: Record<string, Plugin<string>>;
+  plugins: Record<string, Plugin>;
+  marks: Record<string, LeafPlugin>;
   slate: Editor | null;
   placeholder?: string;
-  shortcuts: Record<string, Shortcut<string>>;
+  shortcuts: Record<string, Shortcut>;
 }
 
-export type SlateElement<K extends string = string, T = any> = {
+export type SlateElement = {
   id?: string;
-  type: K;
   children: Descendant[] | SlateElement[];
-  props?: T;
+  [name: string]: unknown;
 };
 
 /**
@@ -28,16 +28,22 @@ export type SlateElement<K extends string = string, T = any> = {
     export type Element = ExtendedType<'Element', BaseElement>;
     经过上面的代码,就明白为什么可以重写 CustomTypes 就可以修改默认的类型了
 */
-type CustomText = { text: string };
+type CustomText = {
+  text: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+  color?: string;
+};
 
 interface CustomElement {
   id?: string;
   children: Descendant[] | SlateElement[];
-  props?: Record<string, unknown>;
   [name: string]: unknown;
 }
 
-declare module "slate" {
+declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor & HistoryEditor;
     Element: CustomElement;

@@ -1,29 +1,57 @@
-import type { EditorEventHandlers } from "./eventHandlers";
-import { EditorType } from "../preset/types";
-import { HTMLAttributes } from "react";
-import { RenderElementProps } from "slate-react";
-import { HOTKEYS } from "../utils/hotkeys";
+import type { EditorEventHandlers } from './eventHandlers';
+import { EditorType } from '../preset/types';
+import { HTMLAttributes } from 'react';
+import { RenderElementProps, RenderLeafProps } from 'slate-react';
+import { HOTKEYS } from '../utils/hotkeys';
 
 export interface PluginElementProps {
-  nodeType?: "block" | "inline" | "void" | "inlineVoid";
+  nodeType?: 'block' | 'inline' | 'void' | 'inlineVoid';
   asRoot?: string;
-  wrap?: boolean;
   [name: string]: unknown;
 }
 export type PluginElementRenderProps = {
   HTMLAttributes?: HTMLAttributes<HTMLElement>;
 };
 
+export type contextType = {
+  children: RenderElementProps['children'];
+  props: RenderElementProps;
+  style: React.CSSProperties;
+};
+
+export type leafContextType = {
+  children: RenderLeafProps['children'];
+  props: RenderLeafProps;
+};
+
 export interface PluginOptions {
   shortcuts?: string[];
-  align?: "left" | "center" | "right";
   HTMLAttributes?: HTMLAttributes<HTMLElement>;
-  create?: (editor: EditorType, elements: Partial<PluginElement>) => void;
-  match?: (elements: Partial<PluginElement>) => boolean;
+  create?: (
+    editor: EditorType,
+    elements: ShortcutElementType,
+    context: ShortcutCreateType
+  ) => void;
+  match?: (context: contextType) => boolean;
+  embedded?: boolean; // 是否可内嵌其他node节点中
+  hotkey?: string[];
   [name: string]: unknown;
 }
+
+export interface LeafPluginOptions {
+  create?: (editor: EditorType, props?: Record<string, unknown>) => void;
+  match?: (context: leafContextType) => boolean;
+  hotkey?: string[];
+  [name: string]: unknown;
+}
+
 export interface PluginElement {
-  render: (props: RenderElementProps) => JSX.Element;
+  render: (context: contextType) => JSX.Element;
+  props?: PluginElementProps;
+}
+
+export interface LeafPluginElement {
+  render: (context: leafContextType) => JSX.Element;
   props?: PluginElementProps;
 }
 
@@ -40,18 +68,31 @@ export type EventHandlers = {
   ) => EditorEventHandlers[key] | void;
 };
 
-export interface Plugin<TKeys extends string = string> {
+export interface Plugin {
   type: string;
   elements: Partial<PluginElement>;
   events?: EventHandlers;
   options?: PluginOptions;
 }
 
-export interface Shortcut<TKeys extends string = string> {
+export interface LeafPlugin {
+  type: string;
+  elements: Partial<LeafPluginElement>;
+  events?: EventHandlers;
+  options?: LeafPluginOptions;
+}
+
+export type ShortcutCreateType = {
+  beforeText: string;
+};
+
+export type ShortcutElementType = Partial<Omit<PluginElement, 'render'>>;
+
+export interface Shortcut {
   type: string;
   elements: Partial<PluginElement>;
   options: PluginOptions;
-  create: () => void;
+  create: (content: ShortcutCreateType) => void;
   isActive: () => boolean;
 }
 

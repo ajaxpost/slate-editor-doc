@@ -1,8 +1,8 @@
 import {
   EditorType,
+  generateId,
   HOTKEYS_TYPE,
   SlateElement,
-  generateId,
 } from '@slate-doc/core';
 import { Editor, Element, Transforms } from 'slate';
 
@@ -10,86 +10,46 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
   return (event: React.KeyboardEvent) => {
     const slate = editor.slate;
     if (!slate || !slate.selection) return;
-
     const match = Editor.above<SlateElement>(slate, {
       at: slate.selection,
       match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
     });
     if (!match) return;
-    const [currentNode, currentNodePath] = match;
-    const parentEntry = Editor.parent(slate, currentNodePath);
-    const [parentNodeElement, parentPath] = parentEntry;
-    if (!Element.isElement(parentNodeElement)) return;
+    const [node, path] = match;
+    const parentMatch = Editor.parent(slate, path);
+    if (!parentMatch) return;
+    const [parentNode] = parentMatch;
 
-    if (parentNodeElement.type === 'callout') {
-      if (hotkeys.isEnter(event)) {
-        event.preventDefault();
+    if (event.isDefaultPrevented()) return;
+    const extra = ['children', 'callout-item', 'align'];
+    const keys = Object.keys(node).filter((o) => !extra.includes(o));
+    if ((!parentNode['callout'] && !node['callout-item']) || keys.length)
+      return;
+    const text = Editor.string(slate, path);
+    if (!text && (hotkeys.isBackspace(event) || hotkeys.isEnter(event))) {
+      event.preventDefault();
 
-        Editor.withoutNormalizing(slate, () => {
-          Transforms.insertNodes(
-            slate,
-            {
-              ...currentNode,
-              props: {
-                ...currentNode.props,
-                wrap: true,
-              },
-              id: generateId(),
-              children: [{ text: '' }],
-            },
-            {
-              select: true,
-            }
+      Transforms.unwrapNodes(slate, {
+        split: true,
+        match(n) {
+          return (
+            Element.isElement(n) && Editor.isBlock(slate, n) && !!n['callout']
           );
-          if (currentNode.type.includes('heading')) {
-            Transforms.setNodes(slate, {
-              type: 'paragraph',
-            });
-          }
-        });
-      }
+        },
+      });
+      Transforms.unsetNodes(slate, 'callout-item');
+      Transforms.setNodes(slate, {
+        id: generateId(),
+      });
+      return;
+    }
+    if (hotkeys.isEnter(event)) {
+      event.preventDefault();
 
-      if (hotkeys.isBackspace(event)) {
-        const text = Editor.string(slate, currentNodePath);
-        if (text.trim().length === 0) {
-          event.preventDefault();
-
-          const isStart = Editor.isStart(
-            slate,
-            slate.selection.anchor,
-            parentPath
-          );
-          if (isStart) {
-            Editor.withoutNormalizing(slate, () => {
-              if (currentNode.type !== 'paragraph') {
-                Transforms.setNodes(slate, {
-                  type: 'paragraph',
-                });
-              } else {
-                Transforms.unwrapNodes(slate, {
-                  at: parentPath,
-                });
-                Transforms.setNodes(slate, {
-                  props: {
-                    wrap: false,
-                  },
-                });
-              }
-            });
-
-            return;
-          }
-          if (currentNode.type !== 'paragraph') {
-            Transforms.setNodes(slate, {
-              type: 'paragraph',
-            });
-          } else {
-            Transforms.removeNodes(slate, {
-              at: currentNodePath,
-            });
-          }
-        }
-      }
+      Transforms.insertNodes(slate, {
+        ...node,
+        children: [{ ...node.children[0], text: '' }],
+      });
     }
   };
 }

@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/css": "^11.11.2",
     "@slate-doc/blockquote": "*",
     "@slate-doc/callout": "*",
     "@slate-doc/core": "*",
+    "@slate-doc/dividing-line": "*",
     "@slate-doc/headings": "*",
     "@slate-doc/lists": "*",
+    "@slate-doc/marks": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
