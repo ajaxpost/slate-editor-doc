@@ -2,35 +2,32 @@ import { ChangeEvent, FC, ReactNode, useState } from 'react';
 import { css } from '@emotion/css';
 import { Editor, Element, Transforms } from 'slate';
 import { EditorType } from '@slate-doc/core';
+import { ReactEditor } from 'slate-react';
 
 interface IProps {
   children: ReactNode;
   language: string;
   editorState: EditorType;
+  element: Element;
 }
 
 interface LanguageSelectProps {
   language: string;
   slate: Editor;
+  element: Element;
 }
 
-const LanguageSelect: FC<LanguageSelectProps> = ({ language, slate }) => {
+const LanguageSelect: FC<LanguageSelectProps> = ({
+  language,
+  slate,
+  element,
+}) => {
   const [selectedLanguage, setSelectedLanguage] = useState(language);
 
   const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelectedLanguage(value);
-    const match = Editor.above(slate, {
-      at: slate.selection!,
-      match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
-    });
-    if (!match) return;
-    const [node, path] = match;
-    const parentMatch = Editor.parent(slate, path);
-    if (!parentMatch) return;
-    const [parentNode, parentPath] = parentMatch;
-    if (!parentNode['code'] && !node['code-item']) return;
-
+    const path = ReactEditor.findPath(slate, element);
     Transforms.setNodes(
       slate,
       {
@@ -39,7 +36,9 @@ const LanguageSelect: FC<LanguageSelectProps> = ({ language, slate }) => {
         },
       },
       {
-        at: parentPath,
+        at: path,
+        match: (n) =>
+          Element.isElement(n) && Editor.isBlock(slate, n) && !!n['code'],
       }
     );
   };
@@ -71,7 +70,12 @@ const LanguageSelect: FC<LanguageSelectProps> = ({ language, slate }) => {
   );
 };
 
-const CodeBlock: FC<IProps> = ({ children, language, editorState }) => {
+const CodeBlock: FC<IProps> = ({
+  children,
+  language,
+  editorState,
+  element,
+}) => {
   const slate = editorState.slate;
   if (!slate || !slate.selection) return;
   return (
@@ -86,7 +90,7 @@ const CodeBlock: FC<IProps> = ({ children, language, editorState }) => {
         padding: 5px 13px;
       `}
     >
-      <LanguageSelect language={language} slate={slate} />
+      <LanguageSelect language={language} element={element} slate={slate} />
       {children}
     </div>
   );

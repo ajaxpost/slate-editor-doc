@@ -1,29 +1,43 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { contextType, EditorPlugin, EditorType } from '@slate-doc/core';
+import {
+  contextType,
+  EditorPlugin,
+  EditorType,
+  SlateElement,
+} from '@slate-doc/core';
 import { css } from '@emotion/css';
 import { onKeyDown } from '../events/onKeyDown';
 import { create } from '../opts/create';
 import { Transforms, Element, Editor } from 'slate';
+import { ReactEditor } from 'slate-react';
 
 interface IProps {
-  theme: string;
-  editorState: EditorType;
+  context: contextType;
 }
 
-const ThemeSelect: FC<IProps> = ({ theme, editorState }) => {
+const ThemeSelect: FC<IProps> = ({ context }) => {
+  const props = context.props.element['callout'] as Record<string, unknown>;
+  const theme = props['theme'] as string;
   const [value, setValue] = useState(theme);
-  const slate = editorState.slate;
-  if (!slate || !slate.selection) return;
 
   const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const editorState = context.editorState;
+    const slate = editorState.slate;
+    if (!slate || !slate.selection) return;
     const v = e.target.value;
+    const path = ReactEditor.findPath(slate, context.props.element);
+
     setValue(v);
     Transforms.setNodes(
       slate,
       { callout: { theme: v } },
       {
-        match: (n) =>
-          Element.isElement(n) && Editor.isBlock(slate, n) && !!n['callout'],
+        at: path,
+        match: (n) => {
+          return (
+            Element.isElement(n) && Editor.isBlock(slate, n) && !!n['callout']
+          );
+        },
       }
     );
   };
@@ -49,7 +63,6 @@ const ThemeSelect: FC<IProps> = ({ theme, editorState }) => {
 };
 
 const CalloutRender = (context: contextType) => {
-  const editorState = context.editorState;
   const props = context.props.element['callout'] as Record<string, unknown>;
   const theme = props['theme'] as string;
 
@@ -102,7 +115,7 @@ const CalloutRender = (context: contextType) => {
         }
       `}
     >
-      <ThemeSelect theme={theme} editorState={editorState} />
+      <ThemeSelect context={context} />
       {context.children}
     </div>
   );

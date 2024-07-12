@@ -22,11 +22,13 @@
     "@slate-doc/core": "*",
     "prismjs": "^1.29.0",
     "react": "^18.3.1",
-    "slate": "^0.103.0"
+    "slate": "^0.103.0",
+    "slate-react": "^0.107.0"
   },
   "peerDependencies": {
     "@slate-doc/core": "*",
     "react": ">=17.0.2",
-    "slate": ">=0.103.0"
+    "slate": ">=0.103.0",
+    "slate-react": ">=0.107.0"
   }
 }

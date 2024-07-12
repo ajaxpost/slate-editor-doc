@@ -6,3 +6,4 @@ export * from './align';
 export * from './line-code';
 export * from './font-size';
 export * from './font-color';
+export * from './line-height';

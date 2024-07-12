@@ -146,7 +146,10 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
       }
     }
 
-    if (HOTKEYS.isSlash(event)) {
+    if (
+      HOTKEYS.isSlash(event) &&
+      Object.keys(node).filter((o) => singles.includes(o)).length === 0
+    ) {
       const isEmpty = Editor.isEmpty(slate, node);
 
       const domSelection = window.getSelection();

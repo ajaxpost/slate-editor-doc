@@ -39,9 +39,14 @@ function codeTokenize(code: string, language: string) {
 const CodeRender = (context: contextType) => {
   const code = context.props.element['code'] as Record<string, string>;
   const editorState = context.editorState;
+  const element = context.props.element;
 
   return (
-    <CodeBlock language={code.language} editorState={editorState}>
+    <CodeBlock
+      language={code.language}
+      element={element}
+      editorState={editorState}
+    >
       {context.children}
     </CodeBlock>
   );

@@ -605,14 +605,6 @@ const initialValue: Descendant[] = [
     id: '7bdd6743-183f-404a-acc8-9b790cbabf65',
     children: [
       {
-        children: [
-          {
-            text: '// 支持代码块高亮',
-          },
-        ],
-        'code-item': true,
-      },
-      {
         'code-item': true,
         children: [
           {

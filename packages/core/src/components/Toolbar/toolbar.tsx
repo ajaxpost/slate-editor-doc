@@ -11,6 +11,7 @@ import {
   Underline,
   Undo2,
   List,
+  ListOrdered,
 } from 'lucide-react';
 import { EditorType, SlateElement } from '../../preset/types';
 import { widget, btn, icon } from './css';
@@ -21,6 +22,7 @@ import FontColor from './font-color';
 import { Editor, Element } from 'slate';
 import BgColor from './bg-color';
 import Align from './align';
+import LineHeight from './line-height';
 
 interface IProps {
   editorState: EditorType;
@@ -50,6 +52,22 @@ const isBulletedList = (editorState: EditorType) => {
   if (!parentMatch) return;
   const [parentNode] = parentMatch;
   if (parentNode['bulleted-list'] && node['bulleted-item']) return true;
+};
+
+const isNumberedList = (editorState: EditorType) => {
+  const slate = editorState.slate;
+  if (!slate || !slate.selection) return;
+  const match = Editor.above<SlateElement>(slate, {
+    at: slate.selection,
+    match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+  });
+  if (!match) return;
+  const [node, path] = match;
+  if (path.length < 2) return;
+  const parentMatch = Editor.parent(slate, path);
+  if (!parentMatch) return;
+  const [parentNode] = parentMatch;
+  if (parentNode['numbered-list'] && node['numbered-item']) return true;
 };
 
 const Toolbar: FC<IProps> = ({ editorState }) => {
@@ -100,6 +118,23 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
         {
           beforeText: '-',
         }
+      );
+    }
+  };
+
+  const numberedListClick = () => {
+    if (isNumberedList(editorState)) {
+      editorState.plugins['numbered-list'].options?.destroy?.(editorState);
+    } else {
+      editorState.plugins['numbered-list'].options?.create?.(
+        editorState,
+        {
+          props: {
+            leval: 0,
+            start: 1,
+          },
+        },
+        { beforeText: '1.' }
       );
     }
   };
@@ -327,6 +362,30 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
                 </Button>
               </Tooltip>
             </span>
+            {/* 有序列表 */}
+            <span className={widget}>
+              <Tooltip
+                arrow={false}
+                title={
+                  <>
+                    <span>有序列表</span>
+                    <br />
+                    <span>Ctrl + 7</span>
+                  </>
+                }
+              >
+                <Button
+                  className={btn}
+                  data-actived={isNumberedList(editorState)}
+                  type="text"
+                  onClick={numberedListClick}
+                >
+                  <ListOrdered size={18} />
+                </Button>
+              </Tooltip>
+            </span>
+            {/* 行高调整 */}
+            <LineHeight />
           </div>
         </div>
       </div>

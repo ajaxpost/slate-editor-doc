@@ -1,7 +1,13 @@
-import { contextType, EditorPlugin } from '@slate-doc/core';
+import {
+  contextType,
+  EditorPlugin,
+  generateId,
+  SlateElement,
+} from '@slate-doc/core';
 import { css } from '@emotion/css';
 import { onKeyDown } from '../events/onKeyDown_num';
 import { create } from '../opts/create';
+import { Editor, Element, Transforms } from 'slate';
 
 const NumberedListRender = (context: contextType) => {
   const ol = context.props.element['numbered-list'];
@@ -55,12 +61,40 @@ const NumberedList = new EditorPlugin({
     embedded: true,
     unEmbedList: ['bulleted-list', 'bulleted-item'],
     create: create('numbered-list'),
+    destroy(editor) {
+      const slate = editor.slate;
+      if (!slate || !slate.selection) return;
+      const match = Editor.above<SlateElement>(slate, {
+        at: slate.selection,
+        match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+      });
+      if (!match) return;
+      const [node, path] = match;
+      const parentMatch = Editor.parent(slate, path);
+      if (!parentMatch) return;
+      const [parentNode, parentPath] = parentMatch;
+      if (parentNode['numbered-list'] && node['numbered-item']) {
+        Transforms.unwrapNodes(slate, {
+          at: parentPath,
+          match: (n) =>
+            Element.isElement(n) &&
+            Editor.isBlock(slate, n) &&
+            !!n['numbered-list'],
+          split: true,
+        });
+        Transforms.setNodes(slate, {
+          id: generateId(),
+        });
+        Transforms.unsetNodes(slate, ['numbered-item']);
+      }
+    },
     match(context) {
       return (
         !!context.props.element['numbered-list'] ||
         !!context.props.element['numbered-item']
       );
     },
+    hotkey: ['mod+7'],
   },
 });
 export { NumberedList };
