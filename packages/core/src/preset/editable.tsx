@@ -560,10 +560,14 @@ const initialValue: Descendant[] = [
     id: 'f60c57b5-ca42-4f3c-8470-543c0038382a',
     children: [
       {
-        text: '支持独立设置行高。',
-        strikethrough: true,
+        text: '支持独立设置行高。当前',
+      },
+      {
+        text: '行高=2',
+        'line-code': true,
       },
     ],
+    'line-height': '2',
   },
   {
     id: 'c0ae4ded-097b-4d3f-9977-906c711b1116',

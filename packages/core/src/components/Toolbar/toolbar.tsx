@@ -386,6 +386,8 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
             </span>
             {/* 行高调整 */}
             <LineHeight />
+            {/* 分割线 */}
+            <Divider />
           </div>
         </div>
       </div>
