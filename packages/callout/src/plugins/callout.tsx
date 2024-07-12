@@ -1,11 +1,57 @@
-import { contextType, EditorPlugin } from '@slate-doc/core';
+import { ChangeEvent, FC, useState } from 'react';
+import { contextType, EditorPlugin, EditorType } from '@slate-doc/core';
 import { css } from '@emotion/css';
 import { onKeyDown } from '../events/onKeyDown';
 import { create } from '../opts/create';
+import { Transforms, Element, Editor } from 'slate';
+
+interface IProps {
+  theme: string;
+  editorState: EditorType;
+}
+
+const ThemeSelect: FC<IProps> = ({ theme, editorState }) => {
+  const [value, setValue] = useState(theme);
+  const slate = editorState.slate;
+  if (!slate || !slate.selection) return;
+
+  const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const v = e.target.value;
+    setValue(v);
+    Transforms.setNodes(
+      slate,
+      { callout: { theme: v } },
+      {
+        match: (n) =>
+          Element.isElement(n) && Editor.isBlock(slate, n) && !!n['callout'],
+      }
+    );
+  };
+
+  return (
+    <select
+      className={css`
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 9999;
+      `}
+      value={value}
+      onChange={onChange}
+    >
+      <option value="default">default</option>
+      <option value="info">info</option>
+      <option value="success">success</option>
+      <option value="warning">warning</option>
+      <option value="error">error</option>
+    </select>
+  );
+};
 
 const CalloutRender = (context: contextType) => {
+  const editorState = context.editorState;
   const props = context.props.element['callout'] as Record<string, unknown>;
-  const theme = props['theme'];
+  const theme = props['theme'] as string;
 
   return (
     <div
@@ -56,6 +102,7 @@ const CalloutRender = (context: contextType) => {
         }
       `}
     >
+      <ThemeSelect theme={theme} editorState={editorState} />
       {context.children}
     </div>
   );
