@@ -21,8 +21,8 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
     const [parentNode] = parentMatch;
 
     if (event.isDefaultPrevented()) return;
-    const extra = ['children', 'callout-item', 'align'];
-    const keys = Object.keys(node).filter((o) => !extra.includes(o));
+    const filter = ['children', 'callout-item', 'align'];
+    const keys = Object.keys(node).filter((o) => !filter.includes(o));
     if ((!parentNode['callout'] && !node['callout-item']) || keys.length)
       return;
     const text = Editor.string(slate, path);

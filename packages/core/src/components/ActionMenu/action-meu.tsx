@@ -3,8 +3,10 @@ import { css } from '@emotion/css';
 import { menuConfig } from './config';
 import { useSlashState } from '../../context/slash-context';
 import { useEditorState } from '../../context/editor-context';
-import { Editor, Transforms } from 'slate';
+import { Editor, Transforms, Element } from 'slate';
 import { ReactEditor } from 'slate-react';
+import { SlateElement } from '../../preset/types';
+import { extra, singles } from '../../extensions/config';
 
 const ActionMenu: FC = () => {
   const editorState = useEditorState();
@@ -29,6 +31,38 @@ const ActionMenu: FC = () => {
       Transforms.select(slate, range);
       Transforms.delete(slate);
     }
+    // start --
+    const match = Editor.above<SlateElement>(slate, {
+      at: slate.selection,
+      match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+    });
+    if (!match) return;
+    const [currentNode] = match;
+    const keys = Object.keys(currentNode).filter((o) => singles.includes(o));
+    if (keys.length) {
+      ReactEditor.focus(slate);
+      setMenuShow(false);
+      return;
+    }
+    if (
+      Object.keys(currentNode).filter((o) => !extra.includes(o)).length &&
+      !plugin.options?.embedded
+    ) {
+      ReactEditor.focus(slate);
+      setMenuShow(false);
+      return;
+    }
+    if (
+      Object.keys(currentNode).filter((o) =>
+        plugin?.options?.unEmbedList?.includes(o)
+      ).length
+    ) {
+      ReactEditor.focus(slate);
+      setMenuShow(false);
+      return;
+    }
+
+    // end --
 
     plugin?.options?.create?.(editorState, plugin.elements, {
       beforeText,

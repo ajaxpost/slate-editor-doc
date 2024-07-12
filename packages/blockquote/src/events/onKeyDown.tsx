@@ -21,8 +21,9 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
     if (!parentMatch) return;
     const [parentNode] = parentMatch;
     if (event.isDefaultPrevented()) return;
-    const extra = ['children', 'blockquote-item', 'align'];
-    const keys = Object.keys(node).filter((o) => !extra.includes(o));
+
+    const filter = ['children', 'blockquote-item', 'align'];
+    const keys = Object.keys(node).filter((o) => !filter.includes(o));
     if ((!parentNode['blockquote'] && !node['blockquote-item']) || keys.length)
       return;
 

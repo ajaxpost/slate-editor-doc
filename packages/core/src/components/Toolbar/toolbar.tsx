@@ -87,18 +87,21 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
   };
 
   const bulletedListClick = () => {
-    if (isBulletedList(editorState)) return;
-    editorState.plugins['bulleted-list'].options?.create?.(
-      editorState,
-      {
-        props: {
-          leval: 0,
+    if (isBulletedList(editorState)) {
+      editorState.plugins['bulleted-list'].options?.destroy?.(editorState);
+    } else {
+      editorState.plugins['bulleted-list'].options?.create?.(
+        editorState,
+        {
+          props: {
+            leval: 0,
+          },
         },
-      },
-      {
-        beforeText: '-',
-      }
-    );
+        {
+          beforeText: '-',
+        }
+      );
+    }
   };
 
   const marks = Editor.marks(slate!);

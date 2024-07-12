@@ -1,6 +1,7 @@
 import React from 'react';
 import { EditorType, SlateElement } from '../preset/types';
 import { Editor } from 'slate';
+import { extra } from '../extensions/config';
 
 export const onChange = (editorState: EditorType, setToolbarState) => {
   return (value: string) => {
@@ -37,7 +38,6 @@ export const onChange = (editorState: EditorType, setToolbarState) => {
         },
       }));
     } else {
-      const extra = ['id', 'align', 'children'];
       const keys = Object.keys(node).filter((o) => extra.indexOf(o) === -1);
       if (!keys.length) {
         setToolbarState((o) => ({

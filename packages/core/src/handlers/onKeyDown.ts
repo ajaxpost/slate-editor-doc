@@ -4,6 +4,7 @@ import { HOTKEYS } from '../utils/hotkeys';
 import { menuConfig } from '../components/ActionMenu/config';
 import { Editor, Transforms, Element, Path } from 'slate';
 import { generateId } from '../utils/generateId';
+import { extra, singles } from '../extensions/config';
 
 export const onKeyDown = (editor: EditorType) => {
   return (event: React.KeyboardEvent) => {
@@ -74,7 +75,6 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
     });
     if (!match) return;
     const [node] = match;
-    if (node['code'] || node['code-item']) return;
 
     if (menuShow) {
       if (HOTKEYS.isArrowDown(event) || HOTKEYS.isArrowUp(event)) {
@@ -104,7 +104,37 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
             Transforms.select(slate, range);
             Transforms.delete(slate);
           }
+          // start --
+          const match = Editor.above<SlateElement>(slate, {
+            at: slate.selection,
+            match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+          });
+          if (!match) return;
+          const [currentNode] = match;
+          const keys = Object.keys(currentNode).filter((o) =>
+            singles.includes(o)
+          );
+          if (keys.length) {
+            setMenuShow(false);
+            return;
+          }
+          if (
+            Object.keys(currentNode).filter((o) => !extra.includes(o)).length &&
+            !plugin.options?.embedded
+          ) {
+            setMenuShow(false);
+            return;
+          }
+          if (
+            Object.keys(currentNode).filter((o) =>
+              plugin?.options?.unEmbedList?.includes(o)
+            ).length
+          ) {
+            setMenuShow(false);
+            return;
+          }
 
+          // end --
           plugin?.options?.create?.(editorState, plugin.elements, {
             beforeText,
           });

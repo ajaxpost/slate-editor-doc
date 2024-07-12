@@ -34,6 +34,7 @@ export interface PluginOptions {
     elements: ShortcutElementType,
     context: ShortcutCreateType
   ) => void;
+  destroy?: (editor: EditorType) => void;
   match?: (context: contextType) => boolean;
   matchLeaf?: (context: leafContextType) => boolean;
   embedded?: boolean; // 是否可内嵌其他node节点中
