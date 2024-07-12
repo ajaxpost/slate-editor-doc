@@ -43,7 +43,7 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
 
       if (
         Object.keys(currentNode).filter((o) => !extra.includes(o)).length &&
-        !matchedBlock.options.embedded
+        !matchedBlock?.options?.embedded
       ) {
         insertText(text);
         return;
