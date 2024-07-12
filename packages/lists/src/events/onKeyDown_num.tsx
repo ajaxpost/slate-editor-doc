@@ -19,11 +19,13 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
       event.preventDefault();
       const item = node['numbered-item'] as Record<string, unknown>;
       const leval = (item.leval || 0) as number;
+      const start = item.start as number;
       if (leval > 0) {
         Transforms.setNodes(slate, {
           'numbered-item': {
             ...item,
             leval: leval - 1,
+            start: start - 1,
           },
         });
       } else {
@@ -50,8 +52,14 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
 
     if (hotkeys.isEnter(event)) {
       event.preventDefault();
+      const item = node['numbered-item'] as Record<string, unknown>;
+      const start = item.start as number;
       Transforms.insertNodes(slate, {
         ...node,
+        'numbered-item': {
+          ...item,
+          start: start + 1,
+        },
         children: [{ ...node.children[0], text: '' }],
       });
     }
@@ -64,6 +72,7 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
         'numbered-item': {
           ...item,
           leval: leval + 1,
+          start: 1,
         },
       });
     }

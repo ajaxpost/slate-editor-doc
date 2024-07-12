@@ -3,6 +3,7 @@ import { EditorType } from '../preset/types';
 import { HTMLAttributes } from 'react';
 import { RenderElementProps, RenderLeafProps } from 'slate-react';
 import { HOTKEYS } from '../utils/hotkeys';
+import { NodeEntry, Range } from 'slate';
 
 export interface PluginElementProps {
   nodeType?: 'block' | 'inline' | 'void' | 'inlineVoid';
@@ -17,41 +18,47 @@ export type contextType = {
   children: RenderElementProps['children'];
   props: RenderElementProps;
   style: React.CSSProperties;
+  editorState: EditorType;
 };
 
 export type leafContextType = {
   children: RenderLeafProps['children'];
   props: RenderLeafProps;
+  classList: string[];
 };
 
 export interface PluginOptions {
   shortcuts?: string[];
-  HTMLAttributes?: HTMLAttributes<HTMLElement>;
   create?: (
     editor: EditorType,
     elements: ShortcutElementType,
     context: ShortcutCreateType
   ) => void;
   match?: (context: contextType) => boolean;
+  matchLeaf?: (context: leafContextType) => boolean;
   embedded?: boolean; // 是否可内嵌其他node节点中
+  unEmbedList?: string[]; // 当前节点不可内嵌到那些节点中,前提是 embedded = true
   hotkey?: string[];
+  decorate?: (entry: NodeEntry, editorState: EditorType) => Range[];
   [name: string]: unknown;
 }
 
 export interface LeafPluginOptions {
   create?: (editor: EditorType, props?: Record<string, unknown>) => void;
-  match?: (context: leafContextType) => boolean;
+  matchLeaf?: (context: leafContextType) => boolean;
   hotkey?: string[];
+  decorate?: (entry: NodeEntry, editorState: EditorType) => Range[];
   [name: string]: unknown;
 }
 
 export interface PluginElement {
   render: (context: contextType) => JSX.Element;
+  renderLeaf?: (context: leafContextType) => JSX.Element;
   props?: PluginElementProps;
 }
 
 export interface LeafPluginElement {
-  render: (context: leafContextType) => JSX.Element;
+  renderLeaf: (context: leafContextType) => JSX.Element;
   props?: PluginElementProps;
 }
 

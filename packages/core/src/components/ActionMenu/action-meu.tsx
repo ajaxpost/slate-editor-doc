@@ -17,8 +17,8 @@ const ActionMenu: FC = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    const type = item.key.split('-')[0];
-    const beforeText = item.key.split('-')[1];
+    const type = item.key.split('_')[0];
+    const beforeText = item.key.split('_')[1];
     const plugin = editorState.plugins[type];
 
     const start = Editor.start(slate, slate.selection?.anchor.path!);
@@ -29,6 +29,7 @@ const ActionMenu: FC = () => {
       Transforms.select(slate, range);
       Transforms.delete(slate);
     }
+
     plugin?.options?.create?.(editorState, plugin.elements, {
       beforeText,
     });

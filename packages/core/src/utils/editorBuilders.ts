@@ -35,6 +35,8 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin[]) {
       shortcuts = [],
       create = () => {},
       embedded = false,
+      decorate = () => [],
+      unEmbedList = [],
     } = plugin.options || {};
     if (shortcuts.length) {
       shortcuts.forEach((shortcut) => {
@@ -44,6 +46,8 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin[]) {
           options: {
             shortcuts,
             embedded,
+            decorate,
+            unEmbedList,
           },
           create: (context) => {
             create(editor, elements, context);

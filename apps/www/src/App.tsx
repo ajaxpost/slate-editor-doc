@@ -6,6 +6,7 @@ import { BlockQuote } from '@slate-doc/blockquote';
 import { Callout } from '@slate-doc/callout';
 import { BulletedList, NumberedList } from '@slate-doc/lists';
 import { DividingLine } from '@slate-doc/dividing-line';
+import { Code } from '@slate-doc/code';
 import {
   Bold,
   Italic,
@@ -24,6 +25,7 @@ const plugins = [
   BulletedList,
   NumberedList,
   DividingLine,
+  Code,
   Bold,
   Italic,
   Strikethrough,

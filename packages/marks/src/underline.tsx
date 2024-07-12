@@ -8,7 +8,7 @@ const UnderlineRender = (context: leafContextType) => {
 const Underline = new EditorPlugin({
   type: 'underline',
   elements: {
-    render: UnderlineRender,
+    renderLeaf: UnderlineRender,
     props: {
       nodeType: 'inline',
     },
@@ -25,7 +25,7 @@ const Underline = new EditorPlugin({
         Editor.addMark(slate, 'underline', true);
       }
     },
-    match(context) {
+    matchLeaf(context) {
       return !!context.props.leaf['underline'];
     },
     hotkey: ['mod+u'],

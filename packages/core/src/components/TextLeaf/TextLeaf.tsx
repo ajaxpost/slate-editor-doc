@@ -6,15 +6,21 @@ interface IProps {
   attributes: RenderLeafProps['attributes'];
   children: ReactNode;
   placeholder: string | undefined;
+  classList: string[];
 }
 
-const TextLeaf: FC<IProps> = ({ attributes, children, placeholder }) => {
+const TextLeaf: FC<IProps> = ({
+  attributes,
+  children,
+  placeholder,
+  classList,
+}) => {
   const selected = useSelected();
 
   return (
     <span
       {...attributes}
-      className={css`
+      className={`${css`
         &:after {
           color: inherit;
           content: attr(data-placeholder);
@@ -31,7 +37,7 @@ const TextLeaf: FC<IProps> = ({ attributes, children, placeholder }) => {
           -moz-user-select: none;
           user-select: none;
         }
-      `}
+      `} ${classList.join(' ')}`}
       data-placeholder={selected && placeholder ? placeholder : undefined}
     >
       {children}

@@ -11,7 +11,6 @@ export function create(type: string) {
     if (!match) return;
     const [node, path] = match;
     const itemType = type.split('-')[0];
-    console.log(path, 'path');
 
     if (path.length >= 2) {
       Transforms.wrapNodes(slate, {

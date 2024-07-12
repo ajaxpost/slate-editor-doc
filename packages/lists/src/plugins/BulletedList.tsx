@@ -51,7 +51,8 @@ const BulletedList = new EditorPlugin({
   },
   options: {
     shortcuts: ['-'],
-    embedded: true,
+    embedded: true, // 可内嵌到其他node节点内
+    unEmbedList: ['numbered-list', 'numbered-item'], // 不可内嵌到这些节点内
     create: create('bulleted-list'),
     match(context) {
       return (

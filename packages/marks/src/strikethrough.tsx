@@ -8,7 +8,7 @@ const StrikethroughRender = (context: leafContextType) => {
 const Strikethrough = new EditorPlugin({
   type: 'strikethrough',
   elements: {
-    render: StrikethroughRender,
+    renderLeaf: StrikethroughRender,
     props: {
       nodeType: 'inline',
     },
@@ -25,7 +25,7 @@ const Strikethrough = new EditorPlugin({
         Editor.addMark(slate, 'strikethrough', true);
       }
     },
-    match(context) {
+    matchLeaf(context) {
       return !!context.props.leaf['strikethrough'];
     },
     hotkey: ['mod+x'],

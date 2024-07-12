@@ -87,6 +87,7 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
   };
 
   const bulletedListClick = () => {
+    if (isBulletedList(editorState)) return;
     editorState.plugins['bulleted-list'].options?.create?.(
       editorState,
       {

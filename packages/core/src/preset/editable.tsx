@@ -146,7 +146,7 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
     setActiveId(null);
   };
 
-  const { renderElement, renderLeaf } = useMemo(
+  const { renderElement, renderLeaf, decorate } = useMemo(
     () => EditorPlugin.start(editorState, items),
     [editorState, items]
   );
@@ -206,6 +206,7 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
                     readOnly={false}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
+                    decorate={decorate}
                     onKeyDown={onKeyDown}
                     style={style}
                   />

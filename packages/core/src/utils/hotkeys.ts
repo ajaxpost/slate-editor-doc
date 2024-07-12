@@ -15,4 +15,5 @@ export const HOTKEYS = {
   isTab: create('tab'),
   isBackspace: create('backspace'),
   isSlash: create('/'),
+  isCtrlEnter: create('ctrl+enter'),
 };

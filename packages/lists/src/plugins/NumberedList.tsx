@@ -44,6 +44,7 @@ const NumberedList = new EditorPlugin({
     props: {
       nodeType: 'block',
       leval: 0,
+      start: 1,
     },
   },
   events: {
@@ -52,6 +53,7 @@ const NumberedList = new EditorPlugin({
   options: {
     shortcuts: ['1.'],
     embedded: true,
+    unEmbedList: ['bulleted-list', 'bulleted-item'],
     create: create('numbered-list'),
     match(context) {
       return (

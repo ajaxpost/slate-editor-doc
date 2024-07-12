@@ -18,14 +18,14 @@ const BoldRender = (context: leafContextType) => {
 const FontColor = new EditorPlugin({
   type: 'font-color',
   elements: {
-    render: BoldRender,
+    renderLeaf: BoldRender,
     props: {
       nodeType: 'inline',
     },
   },
   options: {
     create(editor) {},
-    match(context) {
+    matchLeaf(context) {
       return !!context.props.leaf['color'] || !!context.props.leaf['bg-color'];
     },
   },

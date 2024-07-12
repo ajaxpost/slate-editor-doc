@@ -8,7 +8,7 @@ const BoldRender = (context: leafContextType) => {
 const Bold = new EditorPlugin({
   type: 'bold',
   elements: {
-    render: BoldRender,
+    renderLeaf: BoldRender,
     props: {
       nodeType: 'inline',
     },
@@ -25,7 +25,7 @@ const Bold = new EditorPlugin({
         Editor.addMark(slate, 'bold', true);
       }
     },
-    match(context) {
+    matchLeaf(context) {
       return !!context.props.leaf['bold'];
     },
     hotkey: ['mod+b'],

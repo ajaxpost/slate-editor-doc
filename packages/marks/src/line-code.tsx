@@ -20,7 +20,7 @@ const LineCodeRender = (context: leafContextType) => {
 const LineCode = new EditorPlugin({
   type: 'line-code',
   elements: {
-    render: LineCodeRender,
+    renderLeaf: LineCodeRender,
     props: {
       nodeType: 'inline',
     },
@@ -61,7 +61,7 @@ const LineCode = new EditorPlugin({
         Editor.addMark(slate, 'line-code', true);
       }
     },
-    match(context) {
+    matchLeaf(context) {
       return !!context.props.leaf['line-code'];
     },
     hotkey: ['mod+e'],

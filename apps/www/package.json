@@ -13,6 +13,7 @@
     "@emotion/css": "^11.11.2",
     "@slate-doc/blockquote": "*",
     "@slate-doc/callout": "*",
+    "@slate-doc/code": "*",
     "@slate-doc/core": "*",
     "@slate-doc/dividing-line": "*",
     "@slate-doc/headings": "*",

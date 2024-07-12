@@ -2,7 +2,8 @@ import { EditorType, SlateElement } from '../preset/types';
 import isHotkey from 'is-hotkey';
 import { HOTKEYS } from '../utils/hotkeys';
 import { menuConfig } from '../components/ActionMenu/config';
-import { Editor, Transforms, Element } from 'slate';
+import { Editor, Transforms, Element, Path } from 'slate';
+import { generateId } from '../utils/generateId';
 
 export const onKeyDown = (editor: EditorType) => {
   return (event: React.KeyboardEvent) => {
@@ -32,6 +33,26 @@ export const onKeyDown = (editor: EditorType) => {
         );
       }
     }
+    if (HOTKEYS.isCtrlEnter(event)) {
+      event.preventDefault();
+      const match = Editor.above(slate, {
+        match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+        mode: 'highest',
+      });
+      if (!match) return;
+      const [, path] = match;
+      Transforms.insertNodes(
+        slate,
+        {
+          id: generateId(),
+          children: [{ text: '' }],
+        },
+        {
+          at: Path.next(path),
+          select: true,
+        }
+      );
+    }
   };
 };
 
@@ -48,6 +69,13 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
   return (event: React.KeyboardEvent) => {
     const slate = editorState.slate;
     if (!slate || !slate.selection) return;
+    const match = Editor.above<SlateElement>(slate, {
+      match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+    });
+    if (!match) return;
+    const [node] = match;
+    if (node['code'] || node['code-item']) return;
+
     if (menuShow) {
       if (HOTKEYS.isArrowDown(event) || HOTKEYS.isArrowUp(event)) {
         event.preventDefault();
@@ -64,8 +92,8 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
         if (find) {
           event.preventDefault();
 
-          const type = find.key.split('-')[0];
-          const beforeText = find.key.split('-')[1];
+          const type = find.key.split('_')[0];
+          const beforeText = find.key.split('_')[1];
           const plugin = editorState.plugins[type];
 
           const start = Editor.start(slate, slate.selection?.anchor.path!);
@@ -89,11 +117,6 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
     }
 
     if (HOTKEYS.isSlash(event)) {
-      const match = Editor.above<SlateElement>(slate, {
-        match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
-      });
-      if (!match) return;
-      const [node] = match;
       const isEmpty = Editor.isEmpty(slate, node);
 
       const domSelection = window.getSelection();

@@ -1,6 +1,6 @@
 import { Editor, Element, Range, Transforms } from 'slate';
 import { EditorType } from '../preset/types';
-import { voids } from './config';
+import { singles, voids } from './config';
 
 export const withShortcuts = (editor: EditorType, slate: Editor) => {
   const { insertText, isVoid } = slate;
@@ -28,6 +28,20 @@ export const withShortcuts = (editor: EditorType, slate: Editor) => {
 
       const hasMatchedBlock = !!matchedBlock;
       const extra = ['align', 'fontSize', 'id', 'children'];
+      const keys = Object.keys(currentNode).filter((o) => singles.includes(o));
+      if (keys.length && hasMatchedBlock) {
+        insertText(text);
+        return;
+      }
+      if (
+        Object.keys(currentNode).filter((o) =>
+          matchedBlock?.options?.unEmbedList?.includes(o)
+        ).length
+      ) {
+        insertText(text);
+        return;
+      }
+
       if (hasMatchedBlock && !matchedBlock.isActive?.()) {
         const keys = Object.keys(currentNode).filter((o) => !extra.includes(o));
 

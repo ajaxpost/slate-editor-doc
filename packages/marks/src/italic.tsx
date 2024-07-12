@@ -8,7 +8,7 @@ const ItalicRender = (context: leafContextType) => {
 const Italic = new EditorPlugin({
   type: 'italic',
   elements: {
-    render: ItalicRender,
+    renderLeaf: ItalicRender,
     props: {
       nodeType: 'inline',
     },
@@ -25,7 +25,7 @@ const Italic = new EditorPlugin({
         Editor.addMark(slate, 'italic', true);
       }
     },
-    match(context) {
+    matchLeaf(context) {
       return !!context.props.leaf['italic'];
     },
     hotkey: ['mod+i'],
