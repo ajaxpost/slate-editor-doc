@@ -25,6 +25,7 @@ export type leafContextType = {
   children: RenderLeafProps['children'];
   props: RenderLeafProps;
   classList: string[];
+  editorState: EditorType;
 };
 
 export interface PluginOptions {

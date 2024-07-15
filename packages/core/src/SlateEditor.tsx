@@ -5,7 +5,6 @@ import { EditorType } from './preset/types';
 import { generateId } from './utils/generateId';
 import { EditorPlugin } from './plugins/createEditorPlugin';
 import { buildPlugins, buildShortcuts } from './utils/editorBuilders';
-import { css } from '@emotion/css';
 import { ConfigProvider } from 'antd';
 
 type IProps = {
@@ -58,6 +57,7 @@ const SlateEditor: FC<IProps> = ({
           borderRadiusOuter: 0,
           borderRadiusSM: 0,
           borderRadiusXS: 0,
+          colorPrimary: '#00b96b',
         },
         components: {
           Tooltip: {

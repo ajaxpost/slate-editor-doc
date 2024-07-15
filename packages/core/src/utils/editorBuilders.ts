@@ -1,4 +1,4 @@
-import { Editor, Element } from 'slate';
+import { Editor, Element, Node, Text } from 'slate';
 import { LeafPlugin, Plugin, PluginElement, Shortcut } from '../plugins/type';
 import { EditorType, SlateElement } from '../preset/types';
 
@@ -74,3 +74,24 @@ export function buildShortcuts(editor: EditorType, plugins: Plugin[]) {
   });
   return map;
 }
+
+// 统计文档字数
+export const countWords = (editorState: EditorType) => {
+  let wordCount = 0;
+  const editor = editorState.slate;
+  if (!editor || !editor.selection) return 0;
+
+  const countWordsInNode = (node) => {
+    if (Text.isText(node)) {
+      wordCount += node.text
+        .split(/\s+/)
+        .filter((word) => word.length > 0).length;
+    }
+    if (node.children) {
+      node.children.forEach((child) => countWordsInNode(child));
+    }
+  };
+
+  editor.children.forEach((node) => countWordsInNode(node));
+  return wordCount;
+};

@@ -35,6 +35,11 @@ type CustomText = {
   underline?: boolean;
   strikethrough?: boolean;
   color?: string;
+  link?: {
+    link: string;
+    id: string;
+    open: boolean;
+  };
 };
 
 interface CustomElement {

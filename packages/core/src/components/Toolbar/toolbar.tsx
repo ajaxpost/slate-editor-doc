@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState, MouseEvent } from 'react';
 import { css } from '@emotion/css';
 import { Button, Tooltip } from 'antd';
 import {
@@ -12,6 +12,7 @@ import {
   Undo2,
   List,
   ListOrdered,
+  Link,
 } from 'lucide-react';
 import { EditorType, SlateElement } from '../../preset/types';
 import { widget, btn, icon } from './css';
@@ -69,6 +70,8 @@ const isNumberedList = (editorState: EditorType) => {
   const [parentNode] = parentMatch;
   if (parentNode['numbered-list'] && node['numbered-item']) return true;
 };
+
+const isLinkList = (marks) => marks?.link;
 
 const Toolbar: FC<IProps> = ({ editorState }) => {
   const [refresh, setRefresh] = useState(0);
@@ -137,6 +140,11 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
         { beforeText: '1.' }
       );
     }
+  };
+
+  const linkClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    editorState.marks.link?.options?.create?.(editorState);
   };
 
   const marks = Editor.marks(slate!);
@@ -388,6 +396,28 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
             <LineHeight />
             {/* 分割线 */}
             <Divider />
+            {/* 链接 */}
+            <span className={widget}>
+              <Tooltip
+                arrow={false}
+                title={
+                  <>
+                    <span>插入链接</span>
+                    <br />
+                    <span>Ctrl + K</span>
+                  </>
+                }
+              >
+                <Button
+                  className={btn}
+                  data-actived={isLinkList(marks)}
+                  type="text"
+                  onClick={linkClick}
+                >
+                  <Link size={18} />
+                </Button>
+              </Tooltip>
+            </span>
           </div>
         </div>
       </div>

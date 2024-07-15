@@ -1,5 +1,5 @@
 {
-  "name": "@slate-doc/marks",
+  "name": "@slate-doc/image",
   "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
@@ -20,10 +20,11 @@
   "dependencies": {
     "@emotion/css": "^11.11.2",
     "@slate-doc/core": "*",
-    "antd": "^5.19.1",
-    "lucide-react": "^0.408.0",
+    "re-resizable": "^6.9.17",
     "react": "^18.3.1",
-    "slate": "^0.103.0"
+    "react-photo-view": "^1.2.6",
+    "slate": "^0.103.0",
+    "slate-react": "^0.107.0"
   },
   "peerDependencies": {
     "@slate-doc/core": "*",

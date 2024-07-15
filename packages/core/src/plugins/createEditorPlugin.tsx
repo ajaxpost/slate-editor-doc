@@ -49,6 +49,7 @@ const renderLeaf = (
     children: props.children,
     props,
     classList: [],
+    editorState,
   };
 
   for (const plugin of plugins) {

@@ -7,6 +7,7 @@ import { Callout } from '@slate-doc/callout';
 import { BulletedList, NumberedList } from '@slate-doc/lists';
 import { DividingLine } from '@slate-doc/dividing-line';
 import { Code } from '@slate-doc/code';
+import { Image } from '@slate-doc/image';
 import {
   Bold,
   Italic,
@@ -17,6 +18,7 @@ import {
   LineCode,
   FontSize,
   FontColor,
+  Link,
 } from '@slate-doc/marks';
 import { css } from '@emotion/css';
 
@@ -28,6 +30,7 @@ const plugins = [
   NumberedList,
   DividingLine,
   Code,
+  Image,
   Bold,
   Italic,
   Strikethrough,
@@ -37,6 +40,7 @@ const plugins = [
   LineCode,
   FontSize,
   FontColor,
+  Link,
 ];
 
 const App: FC = () => {
@@ -127,12 +131,18 @@ const App: FC = () => {
           </div>
         </div>
       </header>
-      <Editable
-        plugins={plugins}
-        placeholder="Type / to open menu"
-        width={600}
-        style={{ margin: '0 auto' }}
-      />
+      <div
+        className={css`
+          background: #f2f3f5;
+        `}
+      >
+        <Editable
+          plugins={plugins}
+          placeholder="键入 / 打开菜单"
+          width={700}
+          style={{ margin: '0 auto', background: '#fff' }}
+        />
+      </div>
     </>
   );
 };

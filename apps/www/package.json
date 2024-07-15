@@ -17,6 +17,7 @@
     "@slate-doc/core": "*",
     "@slate-doc/dividing-line": "*",
     "@slate-doc/headings": "*",
+    "@slate-doc/image": "*",
     "@slate-doc/lists": "*",
     "@slate-doc/marks": "*",
     "react": "^18.2.0",

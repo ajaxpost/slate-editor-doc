@@ -1,4 +1,4 @@
-export const voids = ['dividing-line'];
+export const voids = ['dividing-line', 'image'];
 
 export const singles = ['code', 'code-item', 'dividing-line'];
 

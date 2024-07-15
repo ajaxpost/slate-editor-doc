@@ -586,9 +586,28 @@ const initialValue: Descendant[] = [
     children: [
       {
         text: '支持图片上传',
-        strikethrough: true,
       },
     ],
+  },
+  {
+    id: 'b7412365-afc3-4c4f-b5f8-3a584062797b',
+    children: [
+      {
+        text: '',
+      },
+    ],
+    image: {
+      src: '/74407992.jpg',
+      maxSize: {
+        width: 650,
+        height: 550,
+      },
+      size: {
+        width: 430,
+        height: 430,
+      },
+      fit: 'contain',
+    },
   },
   {
     id: '564be823-9ca6-4deb-bcb1-3c732abd338e',

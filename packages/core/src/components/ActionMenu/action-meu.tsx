@@ -24,8 +24,8 @@ const ActionMenu: FC = () => {
     const plugin = editorState.plugins[type];
 
     const start = Editor.start(slate, slate.selection?.anchor.path!);
-
     const range = { anchor: slate.selection.anchor, focus: start };
+
     const text = Editor.string(slate, range);
     if (text === '/') {
       Transforms.select(slate, range);
