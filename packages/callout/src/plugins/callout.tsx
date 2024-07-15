@@ -25,7 +25,10 @@ const ThemeSelect: FC<IProps> = ({ context }) => {
     const slate = editorState.slate;
     if (!slate || !slate.selection) return;
     const v = e.target.value;
+    console.log(ReactEditor, 'ReactEditor');
+
     const path = ReactEditor.findPath(slate, context.props.element);
+    console.log(path, 'path');
 
     setValue(v);
     Transforms.setNodes(

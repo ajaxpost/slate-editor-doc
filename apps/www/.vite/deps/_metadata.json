@@ -1,160 +1,175 @@
 {
-  "hash": "0a272576",
+  "hash": "f63496c8",
   "configHash": "fff3c347",
-  "lockfileHash": "f30362c8",
-  "browserHash": "ef1191e7",
+  "lockfileHash": "696f12ee",
+  "browserHash": "5550b041",
   "optimized": {
     "react/jsx-dev-runtime": {
       "src": "../../../../node_modules/react/jsx-dev-runtime.js",
       "file": "react_jsx-dev-runtime.js",
-      "fileHash": "ebdc7b44",
+      "fileHash": "a90e830b",
       "needsInterop": true
     },
     "react-dom/client": {
       "src": "../../../../node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "6915d35a",
+      "fileHash": "13fe78f0",
       "needsInterop": true
     },
-    "react": {
-      "src": "../../../../node_modules/react/index.js",
-      "file": "react.js",
-      "fileHash": "b6ca482a",
-      "needsInterop": true
-    },
-    "antd": {
-      "src": "../../../../node_modules/antd/es/index.js",
-      "file": "antd.js",
-      "fileHash": "94baf84c",
+    "@emotion/css": {
+      "src": "../../../../node_modules/@emotion/css/dist/emotion-css.esm.js",
+      "file": "@emotion_css.js",
+      "fileHash": "211df9b5",
       "needsInterop": false
     },
     "slate": {
       "src": "../../../../node_modules/slate/dist/index.es.js",
       "file": "slate.js",
-      "fileHash": "c60e9089",
+      "fileHash": "0f1fa9d8",
       "needsInterop": false
     },
-    "@emotion/css": {
-      "src": "../../../../node_modules/@emotion/css/dist/emotion-css.esm.js",
-      "file": "@emotion_css.js",
-      "fileHash": "b4b0ebea",
+    "react": {
+      "src": "../../../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "6ccf7700",
+      "needsInterop": true
+    },
+    "antd": {
+      "src": "../../../../node_modules/antd/es/index.js",
+      "file": "antd.js",
+      "fileHash": "40bcfdf8",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../../../packages/marks/node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "f8c72af8",
       "needsInterop": false
     },
     "prismjs": {
       "src": "../../../../node_modules/prismjs/prism.js",
       "file": "prismjs.js",
-      "fileHash": "486529c5",
+      "fileHash": "b15e9f7f",
       "needsInterop": true
     },
     "prismjs/components/prism-javascript": {
       "src": "../../../../node_modules/prismjs/components/prism-javascript.js",
       "file": "prismjs_components_prism-javascript.js",
-      "fileHash": "9b2219f1",
+      "fileHash": "6e2b7129",
       "needsInterop": true
     },
     "prismjs/components/prism-jsx": {
       "src": "../../../../node_modules/prismjs/components/prism-jsx.js",
       "file": "prismjs_components_prism-jsx.js",
-      "fileHash": "4cae2055",
+      "fileHash": "934dfa2c",
       "needsInterop": true
     },
     "prismjs/components/prism-typescript": {
       "src": "../../../../node_modules/prismjs/components/prism-typescript.js",
       "file": "prismjs_components_prism-typescript.js",
-      "fileHash": "2b648c70",
+      "fileHash": "c139f3fc",
       "needsInterop": true
     },
     "prismjs/components/prism-tsx": {
       "src": "../../../../node_modules/prismjs/components/prism-tsx.js",
       "file": "prismjs_components_prism-tsx.js",
-      "fileHash": "6cf5b940",
+      "fileHash": "709004c6",
       "needsInterop": true
     },
     "prismjs/components/prism-markdown": {
       "src": "../../../../node_modules/prismjs/components/prism-markdown.js",
       "file": "prismjs_components_prism-markdown.js",
-      "fileHash": "928ce16e",
+      "fileHash": "37d33922",
       "needsInterop": true
     },
     "prismjs/components/prism-python": {
       "src": "../../../../node_modules/prismjs/components/prism-python.js",
       "file": "prismjs_components_prism-python.js",
-      "fileHash": "bc35b62b",
+      "fileHash": "ebda2381",
       "needsInterop": true
     },
     "prismjs/components/prism-php": {
       "src": "../../../../node_modules/prismjs/components/prism-php.js",
       "file": "prismjs_components_prism-php.js",
-      "fileHash": "0338669f",
+      "fileHash": "c03dc78a",
       "needsInterop": true
     },
     "prismjs/components/prism-sql": {
       "src": "../../../../node_modules/prismjs/components/prism-sql.js",
       "file": "prismjs_components_prism-sql.js",
-      "fileHash": "ed46f498",
+      "fileHash": "dae94ba3",
       "needsInterop": true
     },
     "prismjs/components/prism-java": {
       "src": "../../../../node_modules/prismjs/components/prism-java.js",
       "file": "prismjs_components_prism-java.js",
-      "fileHash": "22173fa5",
+      "fileHash": "b1b656ac",
       "needsInterop": true
-    },
-    "slate-history": {
-      "src": "../../../../node_modules/slate-history/dist/index.es.js",
-      "file": "slate-history.js",
-      "fileHash": "19dd9eac",
-      "needsInterop": false
     },
     "slate-react": {
       "src": "../../../../node_modules/slate-react/dist/index.es.js",
       "file": "slate-react.js",
-      "fileHash": "91650759",
+      "fileHash": "6dead3d3",
+      "needsInterop": false
+    },
+    "re-resizable": {
+      "src": "../../../../node_modules/re-resizable/lib/index.js",
+      "file": "re-resizable.js",
+      "fileHash": "d6ad4fda",
+      "needsInterop": false
+    },
+    "react-photo-view": {
+      "src": "../../../../node_modules/react-photo-view/dist/react-photo-view.module.js",
+      "file": "react-photo-view.js",
+      "fileHash": "d0a0935c",
+      "needsInterop": false
+    },
+    "slate-history": {
+      "src": "../../../../node_modules/slate-history/dist/index.es.js",
+      "file": "slate-history.js",
+      "fileHash": "2d0a7f85",
       "needsInterop": false
     },
     "@dnd-kit/core": {
       "src": "../../../../node_modules/@dnd-kit/core/dist/core.esm.js",
       "file": "@dnd-kit_core.js",
-      "fileHash": "9e739b66",
+      "fileHash": "62141aa6",
       "needsInterop": false
     },
     "@dnd-kit/sortable": {
       "src": "../../../../node_modules/@dnd-kit/sortable/dist/sortable.esm.js",
       "file": "@dnd-kit_sortable.js",
-      "fileHash": "e8c223b6",
+      "fileHash": "e55dd46d",
       "needsInterop": false
     },
     "lodash": {
       "src": "../../../../node_modules/lodash/lodash.js",
       "file": "lodash.js",
-      "fileHash": "e6631ffa",
+      "fileHash": "a27c3ada",
       "needsInterop": true
     },
     "clsx": {
       "src": "../../../../node_modules/clsx/dist/clsx.mjs",
       "file": "clsx.js",
-      "fileHash": "54331c0f",
+      "fileHash": "3b095fd9",
       "needsInterop": false
     },
     "is-hotkey": {
       "src": "../../../../node_modules/is-hotkey/lib/index.js",
       "file": "is-hotkey.js",
-      "fileHash": "230c34ef",
+      "fileHash": "7022d4c8",
       "needsInterop": true
-    },
-    "lucide-react": {
-      "src": "../../../../node_modules/lucide-react/dist/esm/lucide-react.js",
-      "file": "lucide-react.js",
-      "fileHash": "a9c14426",
-      "needsInterop": false
     }
   },
   "chunks": {
+    "chunk-PDLQVE4F": {
+      "file": "chunk-PDLQVE4F.js"
+    },
     "chunk-LX5T2POA": {
       "file": "chunk-LX5T2POA.js"
     },
-    "chunk-PDLQVE4F": {
-      "file": "chunk-PDLQVE4F.js"
+    "chunk-SS4XGZ4F": {
+      "file": "chunk-SS4XGZ4F.js"
     },
     "chunk-HHU5FWGO": {
       "file": "chunk-HHU5FWGO.js"
@@ -164,9 +179,6 @@
     },
     "chunk-Q5GEKUFB": {
       "file": "chunk-Q5GEKUFB.js"
-    },
-    "chunk-SS4XGZ4F": {
-      "file": "chunk-SS4XGZ4F.js"
     },
     "chunk-G3PMV62Z": {
       "file": "chunk-G3PMV62Z.js"

@@ -597,7 +597,7 @@ const initialValue: Descendant[] = [
       },
     ],
     image: {
-      src: '/74407992.jpg',
+      src: 'https://avatars.githubusercontent.com/u/74407992',
       maxSize: {
         width: 650,
         height: 550,
