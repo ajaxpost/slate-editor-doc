@@ -6,9 +6,10 @@ import { generateId } from './utils/generateId';
 import { EditorPlugin } from './plugins/createEditorPlugin';
 import { buildPlugins, buildShortcuts } from './utils/editorBuilders';
 import { ConfigProvider } from 'antd';
+import { Descendant } from 'slate';
 
 type IProps = {
-  // value?: EditorContentValue;
+  value?: Descendant[];
   plugins: EditorPlugin[];
   placeholder?: string;
   readonly?: boolean;
@@ -24,6 +25,7 @@ const SlateEditor: FC<IProps> = ({
   width,
   style,
   className,
+  value,
 }) => {
   const plugins = useMemo(() => {
     return _plugins.map((plugin) => plugin.getPlugin);
@@ -67,7 +69,12 @@ const SlateEditor: FC<IProps> = ({
       }}
     >
       <EditorProvider editorState={editorState}>
-        <Editable width={width} style={style} className={className} />
+        <Editable
+          width={width}
+          value={value}
+          style={style}
+          className={className}
+        />
       </EditorProvider>
     </ConfigProvider>
   );
