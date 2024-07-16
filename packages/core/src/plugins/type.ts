@@ -47,6 +47,7 @@ export interface PluginOptions {
 
 export interface LeafPluginOptions {
   create?: (editor: EditorType, props?: Record<string, unknown>) => void;
+  destroy?: (editor: EditorType) => void;
   matchLeaf?: (context: leafContextType) => boolean;
   hotkey?: string[];
   decorate?: (entry: NodeEntry, editorState: EditorType) => Range[];

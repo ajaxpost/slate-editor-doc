@@ -1,11 +1,12 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
-import terser from 'rollup-plugin-terser';
+import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 // import { dts } from 'rollup-plugin-dts';
 import postcss from 'rollup-plugin-postcss';
 
+console.log(terser, 'terser');
 const isProd = process.env.NODE_ENV === 'production';
 const isDev = process.env.NODE_ENV === 'development';
 function getPlugins() {

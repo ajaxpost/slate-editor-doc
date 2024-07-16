@@ -5,7 +5,7 @@ import Resizer from './resizer';
 import { useReadOnly } from '@slate-doc/core';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
-import { Editor, Element, Transforms } from 'slate';
+import { Editor, Element, Path, Transforms } from 'slate';
 import { ReactEditor } from 'slate-react';
 
 interface IProps {
@@ -53,7 +53,26 @@ const DocImage: FC<IProps> = ({ children, props, slate, element }) => {
         width: ref.offsetWidth,
         height: ref.offsetHeight,
       };
-      const path = ReactEditor.findPath(slate, element);
+      let path: Path = [];
+      try {
+        path = ReactEditor.findPath(slate, element);
+      } catch (error) {
+        const nodes = Editor.nodes(slate, {
+          at: [],
+          match: (n) => {
+            return (
+              Element.isElement(n) &&
+              Editor.isBlock(slate, n) &&
+              !!n['image'] &&
+              n.id === element.id
+            );
+          },
+        });
+        for (const [node, _path] of nodes) {
+          if (!node['image']) return;
+          path = _path;
+        }
+      }
       Transforms.setNodes(
         slate,
         {

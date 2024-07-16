@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, ReactNode, useState } from 'react';
 import { css } from '@emotion/css';
-import { Editor, Element, Transforms } from 'slate';
+import { Editor, Element, Path, Transforms } from 'slate';
 import { EditorType } from '@slate-doc/core';
 import { ReactEditor } from 'slate-react';
 
@@ -27,7 +27,23 @@ const LanguageSelect: FC<LanguageSelectProps> = ({
   const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelectedLanguage(value);
-    const path = ReactEditor.findPath(slate, element);
+    let path: Path = [];
+    try {
+      path = ReactEditor.findPath(slate, element);
+    } catch (error) {
+      const nodes = Editor.nodes(slate, {
+        at: [],
+        match: (n) =>
+          Element.isElement(n) &&
+          Editor.isBlock(slate, n) &&
+          !!n['code'] &&
+          n.id === element.id,
+      });
+      for (const [node, _path] of nodes) {
+        if (!node['code']) return;
+        path = _path;
+      }
+    }
     Transforms.setNodes(
       slate,
       {

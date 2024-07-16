@@ -27,6 +27,7 @@ import {
 import ActionMenu from '../components/ActionMenu/action-meu';
 import { SlashProvider } from '../context/slash-context';
 import { ConfigProvider } from 'antd';
+import { menuConfig } from '../components/ActionMenu/config';
 
 const initialValue: Descendant[] = [
   {
@@ -452,8 +453,6 @@ const initialValue: Descendant[] = [
     children: [
       {
         text: '分割线',
-        color: '#000000',
-        bold: true,
       },
     ],
     id: '2023394e-fc4c-4760-b2c9-1e145820ff8d',
@@ -673,6 +672,59 @@ const initialValue: Descendant[] = [
     ],
   },
   {
+    id: 'cfd2f4ea-6636-4c1b-a96f-c6243deda359',
+    children: [
+      {
+        text: '插入链接',
+      },
+    ],
+    heading: {
+      nodeType: 'block',
+      leval: 3,
+    },
+  },
+  {
+    id: 'c084fde2-1e7b-48b4-ae26-28203e50547f',
+    children: [
+      {
+        text: '支持 ',
+      },
+      {
+        text: 'Ctrl + K',
+        'line-code': true,
+      },
+      {
+        text: ' 快捷键',
+      },
+    ],
+  },
+  {
+    id: '4edc5124-064e-4a2d-8591-4d30a69c322d',
+    children: [
+      {
+        text: '点击进入百度',
+        link: {
+          link: 'www.baidu.com',
+          id: '65e25f91-a948-42ef-9752-7dcb3ab9572f',
+          open: false,
+        },
+      },
+    ],
+  },
+  {
+    id: '222d0eb7-9234-428d-a596-a4d18e11ae40',
+    children: [
+      {
+        text: '点击进入GitHub',
+        link: {
+          link: 'https://github.com/ajaxpost/slate-editor-doc/tree/master',
+          id: '0f155f9c-2a8f-48d6-8d28-a91d227022ec',
+          open: false,
+        },
+      },
+    ],
+  },
+  {
     id: 'f112ac45-baf9-4f33-b33c-4b1847ec7ee7',
     children: [
       {
@@ -705,6 +757,7 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
   const [menuActiveKey, setMenuActiveKey] = useState('heading-#');
   const [menuShow, setMenuShow] = useState(false);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const [actions, setActions] = useState(menuConfig);
   const editor = useMemo(
     () =>
       withShortcuts(
@@ -745,6 +798,18 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
     EVENT_HANDLERS.onChange(editorState, setToolbarState)(value);
   };
 
+  const onKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    EVENT_HANDLERS.onKeyUp(editorState, {
+      setMenuActiveKey,
+      menuActiveKey,
+      setMenuShow,
+      menuShow,
+      setMenuPosition,
+      actions,
+      setActions,
+    })(event);
+  };
+
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const events: any[] = [];
 
@@ -768,6 +833,8 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
       setMenuShow,
       menuShow,
       setMenuPosition,
+      actions,
+      setActions,
     })(event);
     for (const e of _.uniq(events)) {
       e(editorState, HOTKEYS)(event);
@@ -832,6 +899,8 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
               setMenuShow,
               menuActiveKey,
               setMenuActiveKey,
+              actions,
+              setActions,
             }}
           >
             <Slate
@@ -866,6 +935,7 @@ export const Editable: FC<IProps> = ({ width, style, className }) => {
                     renderLeaf={renderLeaf}
                     decorate={decorate}
                     onKeyDown={onKeyDown}
+                    onKeyUp={onKeyUp}
                     style={style}
                   />
                 </SortableContext>

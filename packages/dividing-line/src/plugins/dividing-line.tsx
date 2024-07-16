@@ -1,6 +1,7 @@
 import { contextType, EditorPlugin, Plugin } from '@slate-doc/core';
 import { create } from '../opts/create';
 import { css } from '@emotion/css';
+import { Transforms } from 'slate';
 
 const DividingLineRender = (context: contextType) => {
   return (
@@ -37,9 +38,13 @@ const DividingLine = new EditorPlugin({
     shortcuts: ['---'],
     embedded: false,
     create: create('dividing-line'),
+    destroy(editor) {
+      Transforms.unsetNodes(editor.slate!, 'dividing-line');
+    },
     match(context) {
       return !!context.props.element['dividing-line'];
     },
+    hotkey: ['alt+mod+s'],
   },
 } as Plugin);
 

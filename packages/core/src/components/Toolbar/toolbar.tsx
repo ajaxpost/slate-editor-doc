@@ -13,6 +13,8 @@ import {
   List,
   ListOrdered,
   Link,
+  TextQuote,
+  Minus,
 } from 'lucide-react';
 import { EditorType, SlateElement } from '../../preset/types';
 import { widget, btn, icon } from './css';
@@ -20,10 +22,11 @@ import Divider from './divider';
 import TextAndTitle from './text-and-title';
 import FontSize from './font-size';
 import FontColor from './font-color';
-import { Editor, Element } from 'slate';
+import { Editor, Element, Transforms } from 'slate';
 import BgColor from './bg-color';
 import Align from './align';
 import LineHeight from './line-height';
+import { generateId } from '../../utils/generateId';
 
 interface IProps {
   editorState: EditorType;
@@ -52,7 +55,7 @@ const isBulletedList = (editorState: EditorType) => {
   const parentMatch = Editor.parent(slate, path);
   if (!parentMatch) return;
   const [parentNode] = parentMatch;
-  if (parentNode['bulleted-list'] && node['bulleted-item']) return true;
+  if (parentNode['bulleted-list'] || node['bulleted-item']) return true;
 };
 
 const isNumberedList = (editorState: EditorType) => {
@@ -68,10 +71,39 @@ const isNumberedList = (editorState: EditorType) => {
   const parentMatch = Editor.parent(slate, path);
   if (!parentMatch) return;
   const [parentNode] = parentMatch;
-  if (parentNode['numbered-list'] && node['numbered-item']) return true;
+  if (parentNode['numbered-list'] || node['numbered-item']) return true;
 };
 
-const isLinkList = (marks) => marks?.link;
+const isLink = (marks) => !!marks?.link;
+
+const isQuote = (editorState: EditorType) => {
+  const slate = editorState.slate;
+  if (!slate || !slate.selection) return;
+  const match = Editor.above<SlateElement>(slate, {
+    at: slate.selection,
+    match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+  });
+  if (!match) return;
+  const [node, path] = match;
+  if (path.length < 2) return;
+  const parentMatch = Editor.parent(slate, path);
+  if (!parentMatch) return;
+  const [parentNode] = parentMatch;
+
+  if (parentNode['blockquote'] || node['blockquote-item']) return true;
+};
+
+const isDividing = (editorState: EditorType) => {
+  const slate = editorState.slate;
+  if (!slate || !slate.selection) return;
+  const match = Editor.above<SlateElement>(slate, {
+    at: slate.selection,
+    match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+  });
+  if (!match) return;
+  const [node, path] = match;
+  if (node['dividing-line']) return true;
+};
 
 const Toolbar: FC<IProps> = ({ editorState }) => {
   const [refresh, setRefresh] = useState(0);
@@ -144,7 +176,47 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
 
   const linkClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    editorState.marks.link?.options?.create?.(editorState);
+    if (isLink(marks)) {
+      editorState.marks.link?.options?.destroy?.(editorState);
+    } else {
+      editorState.marks.link?.options?.create?.(editorState);
+    }
+  };
+
+  const quoteClick = () => {
+    if (isQuote(editorState)) {
+      editorState.plugins.blockquote?.options?.destroy?.(editorState);
+    } else {
+      editorState.plugins.blockquote?.options?.create?.(
+        editorState,
+        {},
+        {
+          beforeText: '>',
+        }
+      );
+    }
+  };
+
+  const dividingClick = () => {
+    if (isDividing(editorState)) {
+      editorState.plugins['dividing-line']?.options?.destroy?.(editorState);
+    } else {
+      Transforms.insertNodes(
+        editorState.slate!,
+        {
+          children: [{ text: '' }],
+          id: generateId(),
+        },
+        {
+          select: true,
+        }
+      );
+      editorState.plugins['dividing-line']?.options?.create?.(
+        editorState,
+        {},
+        { beforeText: '---' }
+      );
+    }
   };
 
   const marks = Editor.marks(slate!);
@@ -410,7 +482,7 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
               >
                 <Button
                   className={btn}
-                  data-actived={isLinkList(marks)}
+                  data-actived={isLink(marks)}
                   type="text"
                   onClick={linkClick}
                 >
@@ -418,6 +490,52 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
                 </Button>
               </Tooltip>
             </span>
+            {/* 插入引用 */}
+            <span className={widget}>
+              <Tooltip
+                arrow={false}
+                title={
+                  <>
+                    <span>插入引用</span>
+                    <br />
+                    <span>Ctrl + U</span>
+                  </>
+                }
+              >
+                <Button
+                  className={btn}
+                  data-actived={isQuote(editorState)}
+                  type="text"
+                  onClick={quoteClick}
+                >
+                  <TextQuote size={18} />
+                </Button>
+              </Tooltip>
+            </span>
+            {/* 插入分割线 */}
+            <span className={widget}>
+              <Tooltip
+                arrow={false}
+                title={
+                  <>
+                    <span>插入分割线</span>
+                    <br />
+                    <span>Alt + Ctrl + S</span>
+                  </>
+                }
+              >
+                <Button
+                  className={btn}
+                  data-actived={isDividing(editorState)}
+                  type="text"
+                  onClick={dividingClick}
+                >
+                  <Minus size={18} />
+                </Button>
+              </Tooltip>
+            </span>
+            {/* 分割线 */}
+            <Divider />
           </div>
         </div>
       </div>

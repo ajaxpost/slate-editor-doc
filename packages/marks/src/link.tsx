@@ -5,7 +5,7 @@ import {
   leafContextType,
   LeafPlugin,
 } from '@slate-doc/core';
-import { Editor, Path, Range, Text, Transforms } from 'slate';
+import { Editor, Range, Text, Transforms } from 'slate';
 import { Button, Input, InputRef, Popover, Tooltip } from 'antd';
 import { css } from '@emotion/css';
 import { Link2Off, Pencil, SquareArrowOutUpRight } from 'lucide-react';
@@ -286,6 +286,11 @@ const Link = new EditorPlugin({
         open: true,
       });
       Editor.insertText(slate, text);
+    },
+    destroy(editor) {
+      const slate = editor.slate;
+      if (!slate || !slate.selection) return;
+      Editor.removeMark(slate, 'link');
     },
     matchLeaf(context) {
       return !!context.props.leaf['link'];

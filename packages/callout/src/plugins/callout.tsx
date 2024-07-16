@@ -1,14 +1,9 @@
 import { ChangeEvent, FC, useState } from 'react';
-import {
-  contextType,
-  EditorPlugin,
-  EditorType,
-  SlateElement,
-} from '@slate-doc/core';
+import { contextType, EditorPlugin, SlateElement } from '@slate-doc/core';
 import { css } from '@emotion/css';
 import { onKeyDown } from '../events/onKeyDown';
 import { create } from '../opts/create';
-import { Transforms, Element, Editor } from 'slate';
+import { Transforms, Element, Editor, Path } from 'slate';
 import { ReactEditor } from 'slate-react';
 
 interface IProps {
@@ -25,10 +20,26 @@ const ThemeSelect: FC<IProps> = ({ context }) => {
     const slate = editorState.slate;
     if (!slate || !slate.selection) return;
     const v = e.target.value;
-    console.log(ReactEditor, 'ReactEditor');
-
-    const path = ReactEditor.findPath(slate, context.props.element);
-    console.log(path, 'path');
+    let path: Path = [];
+    try {
+      path = ReactEditor.findPath(slate, context.props.element);
+    } catch (error) {
+      const nodes = Editor.nodes(slate, {
+        at: [],
+        match: (n) => {
+          return (
+            Element.isElement(n) &&
+            Editor.isBlock(slate, n) &&
+            !!n['callout'] &&
+            n.id === context.props.element.id
+          );
+        },
+      });
+      for (const [node, _path] of nodes) {
+        if (!node['callout']) return;
+        path = _path;
+      }
+    }
 
     setValue(v);
     Transforms.setNodes(

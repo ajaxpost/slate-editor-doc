@@ -3,6 +3,7 @@ export const menuConfig = [
     key: 'heading_#',
     title: 'H1',
     desc: 'h1标签',
+    search: '/h1',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -22,6 +23,7 @@ export const menuConfig = [
     key: 'heading_##',
     title: 'H2',
     desc: 'h2标签',
+    search: '/h2',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -41,6 +43,7 @@ export const menuConfig = [
     key: 'heading_###',
     title: 'H3',
     desc: 'h3标签',
+    search: '/h3',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -60,6 +63,7 @@ export const menuConfig = [
     key: 'blockquote',
     title: '引用块',
     desc: '用于显示引用内容的块元素',
+    search: '/yyk',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -79,6 +83,7 @@ export const menuConfig = [
     key: 'callout',
     title: '提示框',
     desc: '用于显示重要提示信息的框元素',
+    search: '/tsk',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -99,6 +104,7 @@ export const menuConfig = [
     key: 'bulleted-list',
     title: '项目符号列表',
     desc: '用于显示项目符号列表的元素',
+    search: '/fhlb',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -118,6 +124,7 @@ export const menuConfig = [
     key: 'numbered-list',
     title: '编号列表',
     desc: '用于显示编号列表的元素',
+    search: '/bhlb',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -137,6 +144,7 @@ export const menuConfig = [
     key: 'code',
     title: '代码',
     desc: '用于显示代码块的元素',
+    search: '/dm',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -156,6 +164,7 @@ export const menuConfig = [
     key: 'image',
     title: '图片',
     desc: '用于显示图片的元素',
+    search: '/tp',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

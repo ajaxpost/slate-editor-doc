@@ -1,5 +1,6 @@
 import React from 'react';
 import { createContext } from 'react';
+import { menuConfig } from '../components/ActionMenu/config';
 
 export type SlashContextType = {
   menuPosition: {
@@ -16,6 +17,8 @@ export type SlashContextType = {
   setMenuShow: React.Dispatch<React.SetStateAction<boolean>>;
   menuActiveKey: string;
   setMenuActiveKey: React.Dispatch<React.SetStateAction<string>>;
+  actions: typeof menuConfig;
+  setActions: React.Dispatch<React.SetStateAction<typeof menuConfig>>;
 };
 
 const DEFAULT_HANDLERS: SlashContextType = {
@@ -28,6 +31,8 @@ const DEFAULT_HANDLERS: SlashContextType = {
   setMenuShow: () => {},
   menuActiveKey: '',
   setMenuActiveKey: () => {},
+  actions: [],
+  setActions: () => {},
 };
 
 export const SlashContext = createContext<SlashContextType>(DEFAULT_HANDLERS);

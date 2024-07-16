@@ -1,6 +1,5 @@
 import { FC, MouseEvent } from 'react';
 import { css } from '@emotion/css';
-import { menuConfig } from './config';
 import { useSlashState } from '../../context/slash-context';
 import { useEditorState } from '../../context/editor-context';
 import { Editor, Transforms, Element } from 'slate';
@@ -10,8 +9,13 @@ import { extra, singles } from '../../extensions/config';
 
 const ActionMenu: FC = () => {
   const editorState = useEditorState();
-  const { menuPosition, menuActiveKey, setMenuActiveKey, setMenuShow } =
-    useSlashState();
+  const {
+    menuPosition,
+    menuActiveKey,
+    setMenuActiveKey,
+    setMenuShow,
+    actions,
+  } = useSlashState();
 
   const handlerClick = (e: MouseEvent<HTMLButtonElement>, item) => {
     const slate = editorState.slate;
@@ -26,11 +30,8 @@ const ActionMenu: FC = () => {
     const start = Editor.start(slate, slate.selection?.anchor.path!);
     const range = { anchor: slate.selection.anchor, focus: start };
 
-    const text = Editor.string(slate, range);
-    if (text === '/') {
-      Transforms.select(slate, range);
-      Transforms.delete(slate);
-    }
+    Transforms.select(slate, range);
+    Transforms.delete(slate);
     // start --
     const match = Editor.above<SlateElement>(slate, {
       at: slate.selection,
@@ -125,82 +126,105 @@ const ActionMenu: FC = () => {
                 padding: 0;
               `}
             >
-              {menuConfig.map((item) => {
-                return (
-                  <button
-                    onMouseEnter={() => setMenuActiveKey(item.key)}
-                    key={item.key}
-                    onClick={(e) => handlerClick(e, item)}
-                    className={css`
-                      background-color: transparent;
-                      border-style: none;
-                      cursor: pointer;
-                      margin-bottom: 0.125rem;
-                      display: flex;
-                      width: 100%;
-                      align-items: center;
-                      border-radius: 0.375rem;
-                      padding-left: 0.25rem;
-                      padding-right: 0.25rem;
-                      padding-bottom: 0.25rem;
-                      padding-top: 0.25rem;
-                      text-align: left;
-                      font-size: 0.875rem;
-                      line-height: 1.25rem;
-                      background: ${menuActiveKey === item.key
-                        ? '#f3f4f6'
-                        : 'transparent'};
-                    `}
-                  >
-                    {/* icon */}
-                    <div
-                      style={{
-                        minWidth: 40,
-                        width: 40,
-                        height: 40,
-                      }}
+              {actions.length ? (
+                actions.map((item) => {
+                  return (
+                    <button
+                      data-key={item.key}
+                      onMouseEnter={() => setMenuActiveKey(item.key)}
+                      key={item.key}
+                      onClick={(e) => handlerClick(e, item)}
                       className={css`
+                        background-color: transparent;
+                        border-style: none;
+                        cursor: pointer;
+                        margin-bottom: 0.125rem;
                         display: flex;
+                        width: 100%;
                         align-items: center;
-                        justify-content: center;
                         border-radius: 0.375rem;
-                        border-width: 1px;
-                        border-style: solid;
-                        border-color: #e5e7eb;
-                        background-color: #fff;
+                        padding-left: 0.25rem;
+                        padding-right: 0.25rem;
+                        padding-bottom: 0.25rem;
+                        padding-top: 0.25rem;
+                        text-align: left;
+                        font-size: 0.875rem;
+                        line-height: 1.25rem;
+                        background: ${menuActiveKey === item.key
+                          ? '#f3f4f6'
+                          : 'transparent'};
                       `}
                     >
-                      {item.icon}
-                    </div>
-                    {/* text */}
-                    <div
-                      className={css`
-                        margin-left: 0.5rem;
-                      `}
-                    >
+                      {/* icon */}
                       <div
+                        style={{
+                          minWidth: 40,
+                          width: 40,
+                          height: 40,
+                        }}
                         className={css`
-                          font-weight: 500;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          border-radius: 0.375rem;
+                          border-width: 1px;
+                          border-style: solid;
+                          border-color: #e5e7eb;
+                          background-color: #fff;
                         `}
                       >
-                        {item.title}
+                        {item.icon}
                       </div>
+                      {/* text */}
                       <div
                         className={css`
-                          max-width: 200px;
-                          overflow: hidden;
-                          white-space: nowrap;
-                          text-overflow: ellipsis;
-                          font-size: 0.75rem;
-                          line-height: 1rem;
+                          margin-left: 0.5rem;
+                          flex: auto;
                         `}
                       >
-                        {item.desc}
+                        <div
+                          className={css`
+                            font-weight: 500;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                          `}
+                        >
+                          <span>{item.title}</span>
+                          <span
+                            className={css`
+                              color: #6b7280;
+                            `}
+                          >
+                            {item.search}
+                          </span>
+                        </div>
+                        <div
+                          className={css`
+                            max-width: 200px;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            font-size: 0.75rem;
+                            line-height: 1rem;
+                          `}
+                        >
+                          {item.desc}
+                        </div>
                       </div>
-                    </div>
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })
+              ) : (
+                <div
+                  className={css`
+                    padding: 10px 15px;
+                    font-size: 14px;
+                  `}
+                >
+                  暂无匹配的搜索结果
+                </div>
+              )}
             </div>
           </div>
         </div>

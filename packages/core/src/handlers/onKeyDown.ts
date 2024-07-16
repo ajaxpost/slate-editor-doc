@@ -1,7 +1,6 @@
 import { EditorType, SlateElement } from '../preset/types';
 import isHotkey from 'is-hotkey';
 import { HOTKEYS } from '../utils/hotkeys';
-import { menuConfig } from '../components/ActionMenu/config';
 import { Editor, Transforms, Element, Path } from 'slate';
 import { generateId } from '../utils/generateId';
 import { extra, singles } from '../extensions/config';
@@ -56,7 +55,13 @@ export const onKeyDown = (editor: EditorType) => {
     }
   };
 };
-
+// 确保菜单项可见的函数
+function ensureVisible(key: string) {
+  const element = document.querySelector(`[data-key="${key}"]`);
+  if (element) {
+    element.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+}
 // 按下 / 时 触发
 export const slashOnKeyDown = (editorState: EditorType, props) => {
   const {
@@ -65,8 +70,8 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
     setMenuActiveKey,
     setMenuShow,
     setMenuPosition,
+    actions,
   } = props;
-
   return (event: React.KeyboardEvent) => {
     const slate = editorState.slate;
     if (!slate || !slate.selection) return;
@@ -79,16 +84,34 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
     if (menuShow) {
       if (HOTKEYS.isArrowDown(event) || HOTKEYS.isArrowUp(event)) {
         event.preventDefault();
-        const findIndex = menuConfig.findIndex((x) => x.key === menuActiveKey);
+        const findIndex = actions.findIndex((x) => x.key === menuActiveKey);
         if (HOTKEYS.isArrowDown(event)) {
-          const next = menuConfig[findIndex + 1];
-          next && setMenuActiveKey(next.key);
+          if (findIndex === actions.length - 1) {
+            setMenuActiveKey(actions[0].key);
+            ensureVisible(actions[0].key);
+            return;
+          }
+
+          const next = actions[findIndex + 1];
+          if (next) {
+            setMenuActiveKey(next.key);
+            ensureVisible(next.key);
+          }
         } else if (HOTKEYS.isArrowUp(event)) {
-          const prev = menuConfig[findIndex - 1];
-          prev && setMenuActiveKey(prev.key);
+          if (findIndex === 0) {
+            setMenuActiveKey(actions[actions.length - 1].key);
+            ensureVisible(actions[actions.length - 1].key);
+            return;
+          }
+          const prev = actions[findIndex - 1];
+
+          if (prev) {
+            setMenuActiveKey(prev.key);
+            ensureVisible(prev.key);
+          }
         }
       } else if (HOTKEYS.isEnter(event)) {
-        const find = menuConfig.find((x) => x.key === menuActiveKey);
+        const find = actions.find((x) => x.key === menuActiveKey);
         if (find) {
           event.preventDefault();
 
@@ -99,11 +122,8 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
           const start = Editor.start(slate, slate.selection?.anchor.path!);
 
           const range = { anchor: slate.selection.anchor, focus: start };
-          const text = Editor.string(slate, range);
-          if (text === '/') {
-            Transforms.select(slate, range);
-            Transforms.delete(slate);
-          }
+          Transforms.select(slate, range);
+          Transforms.delete(slate);
           // start --
           const match = Editor.above<SlateElement>(slate, {
             at: slate.selection,
@@ -141,8 +161,6 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
 
           setMenuShow(false);
         }
-      } else {
-        setMenuShow(false);
       }
     }
 
