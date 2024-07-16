@@ -109,7 +109,7 @@ const SortableElement: FC<IProps> = ({
     Transforms.insertNodes(
       slate,
       {
-        children: [{ text: '' }],
+        children: [{ text: '/' }],
         id: generateId(),
       },
       {
@@ -118,15 +118,8 @@ const SortableElement: FC<IProps> = ({
       }
     );
     setTimeout(() => {
-      const match = Editor.above<SlateElement>(slate, {
-        match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
-      });
-      if (!match) return;
-      const [node] = match;
-      const isEmpty = Editor.isEmpty(slate, node);
-
       const domSelection = window.getSelection();
-      if (domSelection && domSelection.rangeCount > 0 && isEmpty) {
+      if (domSelection && domSelection.rangeCount > 0) {
         const range = domSelection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         setMenuPosition({

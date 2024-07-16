@@ -112,6 +112,7 @@ export const slashOnKeyDown = (editorState: EditorType, props) => {
         }
       } else if (HOTKEYS.isEnter(event)) {
         const find = actions.find((x) => x.key === menuActiveKey);
+
         if (find) {
           event.preventDefault();
 
