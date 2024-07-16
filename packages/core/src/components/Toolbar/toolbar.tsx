@@ -1,6 +1,6 @@
 import { FC, useMemo, useState, MouseEvent } from 'react';
 import { css } from '@emotion/css';
-import { Button, Tooltip } from 'antd';
+import { Button, Popover, Tooltip } from 'antd';
 import {
   Bold,
   CirclePlus,
@@ -22,11 +22,14 @@ import Divider from './divider';
 import TextAndTitle from './text-and-title';
 import FontSize from './font-size';
 import FontColor from './font-color';
-import { Editor, Element, Transforms } from 'slate';
+import { Editor, Element, Range, Transforms } from 'slate';
 import BgColor from './bg-color';
 import Align from './align';
 import LineHeight from './line-height';
 import { generateId } from '../../utils/generateId';
+import { menuConfig } from '../ActionMenu/config';
+import { ReactEditor } from 'slate-react';
+import { extra, singles } from '../../extensions/config';
 
 interface IProps {
   editorState: EditorType;
@@ -221,6 +224,67 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
 
   const marks = Editor.marks(slate!);
 
+  const handlerClick = (e: MouseEvent<HTMLButtonElement>, item) => {
+    const slate = editorState.slate;
+    if (!slate || !slate.selection) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const type = item.key.split('_')[0];
+    const beforeText = item.key.split('_')[1];
+    const plugin = editorState.plugins[type];
+
+    Transforms.insertNodes(
+      slate,
+      {
+        children: [{ text: '' }],
+        id: generateId(),
+      },
+      {
+        select: true,
+      }
+    );
+
+    // start --
+    const match = Editor.above<SlateElement>(slate, {
+      at: slate.selection,
+      match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+    });
+    if (!match) return;
+    const [currentNode] = match;
+    const keys = Object.keys(currentNode).filter((o) => singles.includes(o));
+    if (keys.length) {
+      ReactEditor.focus(slate);
+      return;
+    }
+    if (
+      Object.keys(currentNode).filter((o) => !extra.includes(o)).length &&
+      !plugin.options?.embedded
+    ) {
+      ReactEditor.focus(slate);
+      return;
+    }
+    if (
+      Object.keys(currentNode).filter((o) =>
+        plugin?.options?.unEmbedList?.includes(o)
+      ).length
+    ) {
+      ReactEditor.focus(slate);
+      return;
+    }
+
+    // end --
+
+    plugin?.options?.create?.(editorState, plugin.elements, {
+      beforeText,
+    });
+    ReactEditor.focus(slate);
+  };
+
+  const isCollapsed = slate!.selection
+    ? Range.isCollapsed(slate!.selection!)
+    : true;
+
   return (
     <>
       <div
@@ -257,16 +321,114 @@ const Toolbar: FC<IProps> = ({ editorState }) => {
           >
             {/* 新增 */}
             <span className={widget}>
-              <Button className={btn} type="text" disabled>
-                <div
-                  style={{
-                    fontSize: 18,
-                  }}
-                  className={icon}
-                >
-                  <CirclePlus size={18} />
-                </div>
-              </Button>
+              <Popover
+                arrow={false}
+                placement="bottomLeft"
+                content={
+                  isCollapsed && (
+                    <>
+                      {menuConfig.map((item) => {
+                        return (
+                          <button
+                            data-key={item.key}
+                            key={item.key}
+                            onClick={(e) => handlerClick(e, item)}
+                            className={css`
+                              background-color: transparent;
+                              border-style: none;
+                              cursor: pointer;
+                              margin-bottom: 0.125rem;
+                              display: flex;
+                              width: 100%;
+                              align-items: center;
+                              border-radius: 0.375rem;
+                              padding-left: 0.25rem;
+                              padding-right: 0.25rem;
+                              padding-bottom: 0.25rem;
+                              padding-top: 0.25rem;
+                              text-align: left;
+                              font-size: 0.875rem;
+                              line-height: 1.25rem;
+                              &:hover {
+                                background-color: #f3f4f6;
+                              }
+                            `}
+                          >
+                            {/* icon */}
+                            <div
+                              style={{
+                                minWidth: 40,
+                                width: 40,
+                                height: 40,
+                              }}
+                              className={css`
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 0.375rem;
+                                border-width: 1px;
+                                border-style: solid;
+                                border-color: #e5e7eb;
+                                background-color: #fff;
+                              `}
+                            >
+                              {item.icon}
+                            </div>
+                            {/* text */}
+                            <div
+                              className={css`
+                                margin-left: 0.5rem;
+                                flex: auto;
+                              `}
+                            >
+                              <div
+                                className={css`
+                                  font-weight: 500;
+                                  display: flex;
+                                  justify-content: space-between;
+                                  align-items: center;
+                                `}
+                              >
+                                <span>{item.title}</span>
+                                <span
+                                  className={css`
+                                    color: #6b7280;
+                                  `}
+                                >
+                                  {item.search}
+                                </span>
+                              </div>
+                              <div
+                                className={css`
+                                  max-width: 200px;
+                                  overflow: hidden;
+                                  white-space: nowrap;
+                                  text-overflow: ellipsis;
+                                  font-size: 0.75rem;
+                                  line-height: 1rem;
+                                `}
+                              >
+                                {item.desc}
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </>
+                  )
+                }
+              >
+                <Button className={btn} type="text" disabled={!isCollapsed}>
+                  <div
+                    style={{
+                      fontSize: 18,
+                    }}
+                    className={icon}
+                  >
+                    <CirclePlus size={18} />
+                  </div>
+                </Button>
+              </Popover>
             </span>
             {/* 分割线 */}
             <Divider />

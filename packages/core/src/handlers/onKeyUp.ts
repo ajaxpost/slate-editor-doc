@@ -11,6 +11,7 @@ export const onKeyUp = (editorState: EditorType, props) => {
       const parentPath = Path.parent(slate.selection.anchor.path);
       const string = Editor.string(slate, parentPath);
       if (!string) {
+        setActions(menuConfig);
         setMenuShow(false);
         return;
       }
