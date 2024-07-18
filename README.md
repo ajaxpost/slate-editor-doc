@@ -13,12 +13,8 @@ https://codesandbox.io/p/sandbox/slate-dnd-kit-brld4z?file=%2Fsrc%2FApp.js%3A87%
 9. revert - 回退
 10. build - 打包
 
-- [x] 拖拽
-
 待解决的问题:
 
 待实现的功能:
 
-1. 实现 按下 Ctrl + Enter 切入到下一行中
-2. 按下 / 弹出菜单列表
-3. 链接leaf,参考语雀
+1. 表格

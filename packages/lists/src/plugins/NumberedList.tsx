@@ -26,9 +26,12 @@ const NumberedListRender = (context: contextType) => {
     );
   }
   if (li) {
+    const start = (li['start'] || 1) as number;
     const leval = (li['leval'] || 0) as number;
+
     return (
       <li
+        value={start}
         className={css`
           margin-left: ${leval * 20}px;
           position: relative;

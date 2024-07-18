@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Descendant, Transforms, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { Editable as _Editable, Slate, withReact } from 'slate-react';
-import { useEditorState } from '../context/editor-context';
+import { useEditorState, useReadOnly } from '../context/editor-context';
 import { css } from '@emotion/css';
 import { generateId } from '../utils/generateId';
 import { withShortcuts } from '../extensions/withShortcuts';
@@ -37,6 +37,7 @@ type IProps = {
 };
 export const Editable: FC<IProps> = ({ width, style, className, value }) => {
   const editorState = useEditorState();
+  const readOnly = useReadOnly();
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [menuActiveKey, setMenuActiveKey] = useState('heading-#');
   const [menuShow, setMenuShow] = useState(false);
@@ -221,7 +222,7 @@ export const Editable: FC<IProps> = ({ width, style, className, value }) => {
                     `}
                     id="editable"
                     spellCheck
-                    readOnly={false}
+                    readOnly={readOnly}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     decorate={decorate}

@@ -4,10 +4,9 @@ import { RenderElementProps } from 'slate-react';
 import { useEditorState, useReadOnly } from '../../context/editor-context';
 import { css } from '@emotion/css';
 import clsx from 'clsx';
-import { Editor, Transforms, Element, Path } from 'slate';
+import { Transforms } from 'slate';
 import { generateId } from '../../utils/generateId';
 import { useSlashState } from '../../context/slash-context';
-import { SlateElement } from '../../preset/types';
 
 type IProps = {
   renderElement: (props: any) => JSX.Element;
@@ -145,68 +144,72 @@ const SortableElement: FC<IProps> = ({
       style={style}
     >
       <Sortable sortable={sortable}>
-        <div
-          className={css`
-            display: flex;
-            height: 24px;
-            opacity: ${!isHovered ? 0 : 1};
-            transition-duration: 0.15s;
-            margin-right: 8px;
-            transition-property: opacity;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-            position: absolute;
-            left: -60px;
-          `}
-          contentEditable={false}
-        >
-          <button
+        {!readOnly && (
+          <div
             className={css`
-              cursor: pointer;
-              &:hover {
-                background: #37362f14;
-              }
-              justify-content: center;
-              align-items: center;
+              display: flex;
+              height: 24px;
+              opacity: ${!isHovered ? 0 : 1};
+              transition-duration: 0.15s;
+              margin-right: 8px;
+              transition-property: opacity;
+              transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+              position: absolute;
+              left: -60px;
             `}
             contentEditable={false}
-            onClick={add}
           >
-            <svg
-              viewBox="0 0 16 16"
-              fill="currentColor"
+            <button
               className={css`
-                width: 16px;
-                height: 16px;
-                display: block;
-                flex-shrink: 0;
-                backface-visibility: hidden;
+                cursor: pointer;
+                &:hover {
+                  background: #37362f14;
+                }
+                justify-content: center;
+                align-items: center;
               `}
+              contentEditable={false}
+              onClick={add}
             >
-              <path d="M7.977 14.963c.407 0 .747-.324.747-.723V8.72h5.362c.399 0 .74-.34.74-.747a.746.746 0 0 0-.74-.738H8.724V1.706c0-.398-.34-.722-.747-.722a.732.732 0 0 0-.739.722v5.529h-5.37a.746.746 0 0 0-.74.738c0 .407.341.747.74.747h5.37v5.52c0 .399.332.723.739.723z"></path>
-            </svg>
-          </button>
-          <button
-            className={css`
-              cursor: pointer;
-              &:hover {
-                background: #37362f14;
-              }
-            `}
-            onMouseEnter={() => {
-              setHoverBtn(true);
-            }}
-            onMouseLeave={() => {
-              setHoverBtn(false);
-            }}
-            contentEditable={false}
-            {...sortable.listeners}
-          >
-            ⠿
-          </button>
-        </div>
+              <svg
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className={css`
+                  width: 16px;
+                  height: 16px;
+                  display: block;
+                  flex-shrink: 0;
+                  backface-visibility: hidden;
+                `}
+              >
+                <path d="M7.977 14.963c.407 0 .747-.324.747-.723V8.72h5.362c.399 0 .74-.34.74-.747a.746.746 0 0 0-.74-.738H8.724V1.706c0-.398-.34-.722-.747-.722a.732.732 0 0 0-.739.722v5.529h-5.37a.746.746 0 0 0-.74.738c0 .407.341.747.74.747h5.37v5.52c0 .399.332.723.739.723z"></path>
+              </svg>
+            </button>
+            <button
+              className={css`
+                cursor: pointer;
+                &:hover {
+                  background: #37362f14;
+                }
+              `}
+              onMouseEnter={() => {
+                setHoverBtn(true);
+              }}
+              onMouseLeave={() => {
+                setHoverBtn(false);
+              }}
+              contentEditable={false}
+              {...sortable.listeners}
+            >
+              ⠿
+            </button>
+          </div>
+        )}
+
         <div
           className={css`
             flex: 1;
+            overflow: hidden;
             background: ${hoverBtn ? '#f0f7fe' : 'transparent'};
           `}
         >

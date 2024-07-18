@@ -1,4 +1,4 @@
-import { EditorPlugin, contextType } from '@slate-doc/core';
+import { EditorPlugin, Plugin, contextType } from '@slate-doc/core';
 import { css } from '@emotion/css';
 import { create } from '../opts/create';
 import { onKeyDown } from '../event/onKeyDown';
@@ -117,6 +117,6 @@ const Heading = new EditorPlugin({
       return !!context.props.element.heading;
     },
   },
-});
+} as Plugin);
 
 export { Heading };

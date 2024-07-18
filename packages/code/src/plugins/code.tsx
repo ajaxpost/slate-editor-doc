@@ -3,6 +3,7 @@ import { create } from '../opts/create';
 import CodeBlock from '../component/code-block';
 import { Editor, Element, Range } from 'slate';
 import Prism from 'prismjs';
+import { onKeyDown } from '../event/onKeyDown';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-typescript';
@@ -63,6 +64,9 @@ const Code = new EditorPlugin({
     props: {
       nodeType: 'block',
     },
+  },
+  events: {
+    onKeyDown,
   },
   options: {
     shortcuts: ['```'],

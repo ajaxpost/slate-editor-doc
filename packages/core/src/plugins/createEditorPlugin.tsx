@@ -22,12 +22,14 @@ const renderElement = (
     props,
     style: {},
     editorState,
+    plain: false,
   };
 
   for (const plugin of plugins) {
     if (plugin.options?.match?.(context) && plugin.elements.render) {
       context.children = plugin.elements.render(context);
     }
+    if (context.plain) return context.children;
   }
 
   return (

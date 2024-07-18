@@ -9,10 +9,16 @@ export function create(type: string) {
       match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
     });
     if (!match) return;
-    const [node, path] = match;
-    if (node[type]) return;
-
-    if (path.length < 2) {
+    const [, path] = match;
+    if (path.length >= 2) {
+      Transforms.wrapNodes(slate, {
+        [type]: true,
+        children: [{ text: '' }],
+      });
+      Transforms.setNodes(slate, {
+        [type + '-item']: true,
+      });
+    } else {
       Transforms.wrapNodes(slate, {
         [type]: true,
         id: generateId(),

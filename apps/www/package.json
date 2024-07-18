@@ -21,6 +21,7 @@
     "@slate-doc/image": "*",
     "@slate-doc/lists": "*",
     "@slate-doc/marks": "*",
+    "@slate-doc/table": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

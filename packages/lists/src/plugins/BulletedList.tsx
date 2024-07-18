@@ -19,7 +19,7 @@ const BulletedListRender = (context: contextType) => {
       <ul
         className={css`
           margin: 0;
-          padding-left: 10px;
+          padding-left: 20px;
         `}
       >
         {context.children}

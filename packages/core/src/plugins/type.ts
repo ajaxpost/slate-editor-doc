@@ -19,6 +19,7 @@ export type contextType = {
   props: RenderElementProps;
   style: React.CSSProperties;
   editorState: EditorType;
+  plain: boolean;
 };
 
 export type leafContextType = {

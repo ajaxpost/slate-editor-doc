@@ -1,5 +1,10 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { contextType, EditorPlugin, SlateElement } from '@slate-doc/core';
+import {
+  contextType,
+  EditorPlugin,
+  SlateElement,
+  useReadOnly,
+} from '@slate-doc/core';
 import { css } from '@emotion/css';
 import { onKeyDown } from '../events/onKeyDown';
 import { create } from '../opts/create';
@@ -79,6 +84,7 @@ const ThemeSelect: FC<IProps> = ({ context }) => {
 const CalloutRender = (context: contextType) => {
   const props = context.props.element['callout'] as Record<string, unknown>;
   const theme = props['theme'] as string;
+  const readOnly = useReadOnly();
 
   return (
     <div
@@ -129,7 +135,8 @@ const CalloutRender = (context: contextType) => {
         }
       `}
     >
-      <ThemeSelect context={context} />
+      {!readOnly && <ThemeSelect context={context} />}
+
       {context.children}
     </div>
   );

@@ -8,6 +8,7 @@ import { BulletedList, NumberedList } from '@slate-doc/lists';
 import { DividingLine } from '@slate-doc/dividing-line';
 import { Code } from '@slate-doc/code';
 import { Image } from '@slate-doc/image';
+import { Table } from '@slate-doc/table';
 import {
   Bold,
   Italic,
@@ -32,6 +33,7 @@ const plugins = [
   DividingLine,
   Code,
   Image,
+  Table,
   Bold,
   Italic,
   Strikethrough,
@@ -144,6 +146,7 @@ const App: FC = () => {
           placeholder="键入 / 打开菜单"
           width={700}
           value={data}
+          readonly={false}
           style={{ margin: '0 auto', background: '#fff' }}
         />
       </div>

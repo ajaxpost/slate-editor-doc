@@ -14,6 +14,11 @@ export function create(type: string) {
   ) {
     const slate = editor.slate;
     if (!slate || !slate.selection) return;
+    const match = Editor.above(slate, {
+      match: (n) => Element.isElement(n) && Editor.isBlock(slate, n),
+    });
+    if (!match) return;
+    const [, path] = match;
 
     Editor.withoutNormalizing(slate, () => {
       Transforms.setNodes(
@@ -24,14 +29,22 @@ export function create(type: string) {
         { match: (n) => Element.isElement(n) && Editor.isBlock(slate, n) }
       );
       Transforms.unsetNodes(slate, ['id', 'align', 'font-size']);
-
-      Transforms.wrapNodes(slate, {
-        [type]: {
-          language: 'javascript',
-        },
-        id: generateId(),
-        children: [{ text: '' }],
-      });
+      if (path.length >= 2) {
+        Transforms.wrapNodes(slate, {
+          [type]: {
+            language: 'javascript',
+          },
+          children: [{ text: '' }],
+        });
+      } else {
+        Transforms.wrapNodes(slate, {
+          [type]: {
+            language: 'javascript',
+          },
+          id: generateId(),
+          children: [{ text: '' }],
+        });
+      }
     });
   };
 }

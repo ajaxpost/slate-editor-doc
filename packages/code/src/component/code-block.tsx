@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, ReactNode, useState } from 'react';
 import { css } from '@emotion/css';
 import { Editor, Element, Path, Transforms } from 'slate';
-import { EditorType } from '@slate-doc/core';
+import { EditorType, useReadOnly } from '@slate-doc/core';
 import { ReactEditor } from 'slate-react';
 
 interface IProps {
@@ -13,7 +13,7 @@ interface IProps {
 
 interface LanguageSelectProps {
   language: string;
-  slate: Editor;
+  slate: Editor | null;
   element: Element;
 }
 
@@ -23,8 +23,10 @@ const LanguageSelect: FC<LanguageSelectProps> = ({
   element,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState(language);
+  const readOnly = useReadOnly();
 
   const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (!slate || !slate.selection) return;
     const value = e.target.value;
     setSelectedLanguage(value);
     let path: Path = [];
@@ -59,7 +61,18 @@ const LanguageSelect: FC<LanguageSelectProps> = ({
     );
   };
 
-  return (
+  return readOnly ? (
+    <div
+      className={css`
+        position: absolute;
+        top: 10px;
+        right: 0px;
+        z-index: 1000;
+      `}
+    >
+      {selectedLanguage}
+    </div>
+  ) : (
     <select
       contentEditable={false}
       className={css`
@@ -93,7 +106,6 @@ const CodeBlock: FC<IProps> = ({
   element,
 }) => {
   const slate = editorState.slate;
-  if (!slate || !slate.selection) return;
   return (
     <div
       spellCheck={false}

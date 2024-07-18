@@ -19,13 +19,28 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
       event.preventDefault();
       const item = node['numbered-item'] as Record<string, unknown>;
       const leval = (item.leval || 0) as number;
-      const start = item.start as number;
+
       if (leval > 0) {
+        const pre = Editor.previous(slate, {
+          match: (n) => {
+            const nItem = n['numbered-item'] as Record<string, unknown>;
+            return (
+              Element.isElement(n) &&
+              Editor.isBlock(slate, n) &&
+              nItem &&
+              nItem['leval'] === leval - 1
+            );
+          },
+        });
+        if (!pre) return;
+        const [preNode] = pre;
+        const nItem = preNode['numbered-item'] as Record<string, unknown>;
+
         Transforms.setNodes(slate, {
           'numbered-item': {
             ...item,
             leval: leval - 1,
-            start: start - 1,
+            start: (nItem?.start as number) + 1,
           },
         });
       } else {

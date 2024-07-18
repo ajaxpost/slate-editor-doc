@@ -18,7 +18,7 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
     const [node, path] = match;
     const parentMatch = Editor.parent(slate, path);
     if (!parentMatch) return;
-    const [parentNode] = parentMatch;
+    const [parentNode, parentPath] = parentMatch;
 
     if (event.isDefaultPrevented()) return;
     const filter = ['children', 'callout-item', 'align'];
@@ -38,9 +38,12 @@ export function onKeyDown(editor: EditorType, hotkeys: HOTKEYS_TYPE) {
         },
       });
       Transforms.unsetNodes(slate, 'callout-item');
-      Transforms.setNodes(slate, {
-        id: generateId(),
-      });
+      if (parentPath.length < 2) {
+        Transforms.setNodes(slate, {
+          id: generateId(),
+        });
+      }
+
       return;
     }
     if (hotkeys.isEnter(event)) {
