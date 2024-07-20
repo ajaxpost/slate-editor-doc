@@ -32,6 +32,7 @@ export function create(type: string) {
         children: Array.from({ length: colSize }, () => {
           return {
             'table-cell': true,
+            cellId: generateId(),
             children: [
               {
                 children: [{ text: '' }],

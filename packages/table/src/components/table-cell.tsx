@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { Resizable, ResizeCallback } from 're-resizable';
 import { contextType, SlateElement, useReadOnly } from '@slate-doc/core';
 import { ReactEditor } from 'slate-react';
-import { Editor, Element, Transforms } from 'slate';
+import { Editor, Element, Path, Transforms } from 'slate';
 import { useTableState } from '../context/table-context';
 
 interface IProps {
@@ -18,7 +18,27 @@ const TableCell: FC<IProps> = ({ children, context }) => {
     const slate = context.editorState.slate;
     if (!slate || !slate.selection) return;
     const width = ref.offsetWidth;
-    const path = ReactEditor.findPath(slate, context.props.element);
+    let path: Path = [];
+    try {
+      path = ReactEditor.findPath(slate, context.props.element);
+    } catch (error) {
+      const nodes = Editor.nodes(slate, {
+        at: [],
+        match: (n) => {
+          return (
+            Element.isElement(n) &&
+            Editor.isBlock(slate, n) &&
+            !!n['table-cell'] &&
+            n.cellId === context.props.element.cellId
+          );
+        },
+      });
+      for (const [node, _path] of nodes) {
+        if (!node['table-cell']) return;
+        path = _path;
+      }
+    }
+
     const index = path[path.length - 1];
     const newWidths = [...widths];
     newWidths[index] = width;
@@ -28,7 +48,26 @@ const TableCell: FC<IProps> = ({ children, context }) => {
   const onResizeStop: ResizeCallback = (event, direction, ref) => {
     const slate = context.editorState.slate;
     if (!slate || !slate.selection) return;
-    const path = ReactEditor.findPath(slate, context.props.element);
+    let path: Path = [];
+    try {
+      path = ReactEditor.findPath(slate, context.props.element);
+    } catch (error) {
+      const nodes = Editor.nodes(slate, {
+        at: [],
+        match: (n) => {
+          return (
+            Element.isElement(n) &&
+            Editor.isBlock(slate, n) &&
+            !!n['table-cell'] &&
+            n.cellId === context.props.element.cellId
+          );
+        },
+      });
+      for (const [node, _path] of nodes) {
+        if (!node['table-cell']) return;
+        path = _path;
+      }
+    }
     const nodes = Editor.nodes<SlateElement>(slate, {
       at: path,
       mode: 'highest',

@@ -18,3 +18,5 @@ https://codesandbox.io/p/sandbox/slate-dnd-kit-brld4z?file=%2Fsrc%2FApp.js%3A87%
 待实现的功能:
 
 1. 表格
+   单元格合并
+   新增行

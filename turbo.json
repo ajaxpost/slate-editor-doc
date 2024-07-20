@@ -3,8 +3,7 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "dependsOn": ["^build"]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -13,6 +12,8 @@
       "cache": false,
       "persistent": true
     },
-    "deploy": {}
+    "deploy": {
+      "cache": false
+    }
   }
 }
