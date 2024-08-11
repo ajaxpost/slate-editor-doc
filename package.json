@@ -10,7 +10,8 @@
     "dev": "turbo dev --filter www",
     "deploy": "turbo deploy --filter www",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "publish": "turbo publish"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^26.0.1",
